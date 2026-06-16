@@ -31,7 +31,10 @@ const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boole
             src={imageData.imageUrl}
             alt={imageData.description}
             fill
-            className="object-contain"
+            className={cn(
+              "object-contain transition-all duration-700",
+              color === 'blue' ? "hue-rotate-[190deg] saturate-[1.5]" : "hue-rotate-[340deg] saturate-[1.8]"
+            )}
             data-ai-hint={imageData.imageHint}
           />
           {/* Subtle underglow */}
@@ -81,7 +84,7 @@ export default function ScanPage() {
         </div>
       </div>
 
-      {/* Hero Display - Increased Height and adjusted padding */}
+      {/* Hero Display */}
       <div className="h-[55vh] flex items-center justify-center gap-4 px-6 pt-24 pb-12">
         {mockScooters.map((scooter) => (
           <div 

@@ -32,15 +32,15 @@
     },
     {
       "id": "scooter-blue",
-      "description": "A sleek blue electric scooter",
-      "imageUrl": "https://picsum.photos/seed/blue-scooter/600/600",
-      "imageHint": "blue scooter"
+      "description": "Premium electric scooter (Azure Glide)",
+      "imageUrl": "https://images.91wheels.com/assets/b_images/gallery/tvs/iqube-electric/tvs-iqube-electric-0-1769674235.png?w=850&q=40",
+      "imageHint": "electric scooter"
     },
     {
       "id": "scooter-red",
-      "description": "A stylish red electric scooter",
-      "imageUrl": "https://picsum.photos/seed/red-scooter/600/600",
-      "imageHint": "red scooter"
+      "description": "Premium electric scooter (Crimson Bolt)",
+      "imageUrl": "https://images.91wheels.com/assets/b_images/gallery/tvs/iqube-electric/tvs-iqube-electric-0-1769674235.png?w=850&q=40",
+      "imageHint": "electric scooter"
     }
   ]
 }
