@@ -22,11 +22,11 @@ const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boole
 
   return (
     <div className={cn(
-      "relative transition-all duration-700 ease-out transform w-72 h-72 sm:w-80 sm:h-80",
-      isSelected ? "scale-100 opacity-100 rotate-0" : "scale-50 opacity-20 blur-[2px] -rotate-6"
+      "relative transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] transform w-64 h-64 sm:w-80 sm:h-80",
+      isSelected ? "scale-110 opacity-100 blur-0" : "scale-75 opacity-20 blur-[1px]"
     )}>
       {imageData && (
-        <div className="relative w-full h-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
+        <div className="relative w-full h-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.5)]">
           <Image 
             src={imageData.imageUrl}
             alt={imageData.description}
@@ -38,8 +38,9 @@ const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boole
             data-ai-hint={imageData.imageHint}
             priority
           />
+          {/* Internal Glow for depth */}
           <div className={cn(
-            "absolute bottom-4 left-1/2 -translate-x-1/2 w-3/4 h-6 blur-2xl rounded-full transition-opacity duration-700",
+            "absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-12 blur-3xl rounded-full transition-opacity duration-1000",
             isSelected ? "opacity-40" : "opacity-0",
             color === 'blue' ? "bg-blue-400" : "bg-red-400"
           )} />
@@ -89,7 +90,7 @@ export default function ScanPage() {
     <div className="min-h-screen bg-[#0F172A] flex flex-col relative overflow-hidden selection:bg-none">
       {/* Dynamic Background Glow */}
       <div className={cn(
-        "absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[60vh] transition-colors duration-1000 blur-[120px] opacity-20 pointer-events-none",
+        "absolute top-0 left-1/2 -translate-x-1/2 w-[180%] h-[70vh] transition-colors duration-1000 blur-[140px] opacity-25 pointer-events-none",
         selectedScooter.color === 'blue' ? "bg-blue-600" : "bg-red-600"
       )} />
 
@@ -99,33 +100,33 @@ export default function ScanPage() {
           variant="ghost" 
           size="icon" 
           onClick={() => router.back()} 
-          className="rounded-full bg-white/10 backdrop-blur-lg hover:bg-white/20 transition-all"
+          className="rounded-full bg-white/10 backdrop-blur-xl hover:bg-white/20 transition-all border border-white/10"
         >
           <X className="w-6 h-6" />
         </Button>
         <div className="text-center">
-          <h1 className="font-headline text-lg font-black tracking-widest uppercase text-white">Select Ride</h1>
-          <p className="text-[10px] text-white/40 font-bold tracking-tighter uppercase">Raipur Fleet v3.2</p>
+          <h1 className="font-headline text-lg font-black tracking-widest uppercase text-white">Choose Ride</h1>
+          <p className="text-[10px] text-white/40 font-bold tracking-tighter uppercase">Fleet Raipur 2.0</p>
         </div>
-        <div className="bg-white/10 backdrop-blur-lg px-3 py-1.5 rounded-full flex items-center gap-2 border border-white/5">
+        <div className="bg-white/10 backdrop-blur-xl px-4 py-2 rounded-full flex items-center gap-2 border border-white/10">
           <ShieldCheck className="w-4 h-4 text-green-400" />
           <span className="text-[10px] font-black text-white">SECURE</span>
         </div>
       </div>
 
-      {/* Sliding Carousel Display */}
+      {/* Carousel Section */}
       <div 
-        className="h-[55vh] relative flex items-center justify-center pt-24 pb-12 overflow-hidden touch-pan-y"
+        className="h-[50vh] relative flex items-center justify-center pt-24 overflow-hidden touch-pan-y"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
-        {/* Navigation Arrows */}
+        {/* Strictly Floating Arrows over the visual area */}
         <button 
           onClick={handlePrev}
           disabled={selectedIndex === 0}
           className={cn(
-            "absolute left-4 z-40 p-3 rounded-full bg-white/5 text-white/40 transition-all",
-            selectedIndex === 0 ? "opacity-0 pointer-events-none" : "hover:bg-white/10 active:scale-90"
+            "absolute left-6 z-[60] p-4 rounded-full bg-white/5 backdrop-blur-md text-white/30 border border-white/5 transition-all",
+            selectedIndex === 0 ? "opacity-0 pointer-events-none" : "hover:bg-white/10 active:scale-90 opacity-100"
           )}
         >
           <ChevronLeft className="w-8 h-8" />
@@ -135,18 +136,19 @@ export default function ScanPage() {
           onClick={handleNext}
           disabled={selectedIndex === mockScooters.length - 1}
           className={cn(
-            "absolute right-4 z-40 p-3 rounded-full bg-white/5 text-white/40 transition-all",
-            selectedIndex === mockScooters.length - 1 ? "opacity-0 pointer-events-none" : "hover:bg-white/10 active:scale-90"
+            "absolute right-6 z-[60] p-4 rounded-full bg-white/5 backdrop-blur-md text-white/30 border border-white/5 transition-all",
+            selectedIndex === mockScooters.length - 1 ? "opacity-0 pointer-events-none" : "hover:bg-white/10 active:scale-90 opacity-100"
           )}
         >
           <ChevronRight className="w-8 h-8" />
         </button>
 
+        {/* The Carousel Container */}
         <div 
           className="flex transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] items-center"
           style={{ 
-            transform: `translateX(${selectedIndex === 0 ? '15%' : '-15%'})`,
-            width: '140%' 
+            transform: `translateX(${selectedIndex === 0 ? '25%' : '-25%'})`,
+            width: '200%' 
           }}
         >
           {mockScooters.map((scooter, idx) => (
@@ -154,19 +156,19 @@ export default function ScanPage() {
               key={scooter.id}
               onClick={() => setSelectedIndex(idx)}
               className={cn(
-                "cursor-pointer transition-all duration-700 flex flex-col items-center justify-center flex-1",
-                selectedIndex === idx ? "z-10" : "z-0 scale-90"
+                "flex-1 flex flex-col items-center justify-center transition-all duration-700",
+                selectedIndex === idx ? "z-20" : "z-10 opacity-40 grayscale-[0.5]"
               )}
             >
               <ScooterVisual color={scooter.color} isSelected={selectedIndex === idx} />
               
               <div className={cn(
-                "mt-4 transition-all duration-500",
-                selectedIndex === idx ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+                "mt-6 transition-all duration-500",
+                selectedIndex === idx ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               )}>
                 <div className={cn(
-                  "w-3 h-3 rounded-full mx-auto",
-                  scooter.color === 'blue' ? "bg-blue-500 shadow-[0_0_15px_#3B82F6]" : "bg-red-500 shadow-[0_0_15px_#EF4444]"
+                  "w-2 h-2 rounded-full mx-auto",
+                  scooter.color === 'blue' ? "bg-blue-500 shadow-[0_0_20px_#3B82F6]" : "bg-red-500 shadow-[0_0_20px_#EF4444]"
                 )} />
               </div>
             </div>
@@ -175,93 +177,94 @@ export default function ScanPage() {
       </div>
 
       {/* Details Container */}
-      <div className="flex-1 bg-background rounded-t-[4rem] relative z-20 shadow-[0_-20px_80px_rgba(0,0,0,0.4)] p-8 flex flex-col animate-in slide-in-from-bottom-20 duration-1000">
+      <div className="flex-1 bg-background rounded-t-[4rem] relative z-30 shadow-[0_-30px_100px_rgba(0,0,0,0.6)] p-8 flex flex-col animate-in slide-in-from-bottom-24 duration-1000">
         
         {/* Model Info Header */}
         <div className="flex justify-between items-end mb-8">
           <div className="space-y-1">
             <span className={cn(
-              "text-[10px] font-black uppercase tracking-[0.3em] px-3 py-1 rounded-full transition-colors duration-500",
+              "text-[10px] font-black uppercase tracking-[0.3em] px-4 py-1.5 rounded-full transition-colors duration-500",
               selectedScooter.color === 'blue' ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"
             )}>
               {selectedScooter.name}
             </span>
-            <h2 className="text-4xl font-headline font-black tracking-tighter text-foreground pt-2">
+            <h2 className="text-4xl font-headline font-black tracking-tighter text-foreground pt-3">
               {selectedScooter.id}
             </h2>
             <div className="flex items-center gap-2">
               <Star className="w-4 h-4 text-accent fill-accent" />
-              <span className="text-xs font-bold text-muted-foreground uppercase">{selectedScooter.condition} Grade</span>
+              <span className="text-xs font-bold text-muted-foreground uppercase">{selectedScooter.condition} Condition</span>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Price</p>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Pricing</p>
             <p className="text-3xl font-headline font-black text-primary leading-none">{selectedScooter.price}</p>
           </div>
         </div>
 
-        {/* Dynamic Stats Grid */}
+        {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4 mb-8">
-          <Card className="p-6 rounded-[2.5rem] border-none bg-secondary/20 shadow-sm transition-all hover:bg-secondary/30">
+          <Card className="p-6 rounded-[2.5rem] border-none bg-secondary/20 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-md">
                 <BatteryFull className={cn(
                   "w-6 h-6 transition-colors duration-500",
                   selectedScooter.battery > 50 ? "text-green-500" : "text-yellow-500"
                 )} />
               </div>
               <div>
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Charge</p>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Battery</p>
                 <p className="text-2xl font-headline font-black">{selectedScooter.battery}%</p>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6 rounded-[2.5rem] border-none bg-secondary/20 shadow-sm transition-all hover:bg-secondary/30">
+          <Card className="p-6 rounded-[2.5rem] border-none bg-secondary/20 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-md">
                 <MapPin className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Est. Range</p>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Range</p>
                 <p className="text-2xl font-headline font-black">{selectedScooter.range}<span className="text-xs ml-1 opacity-40">KM</span></p>
               </div>
             </div>
           </Card>
         </div>
 
-        {/* Pricing Info */}
-        <div className="flex justify-between px-4 mb-8">
-          <div className="flex flex-col gap-1">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Unlock</span>
-            <span className="font-bold">₹10.00</span>
+        {/* Pricing/Info Row */}
+        <div className="flex justify-between px-6 mb-10">
+          <div className="text-center">
+            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest block mb-1">Base</span>
+            <span className="font-bold text-sm">₹10</span>
           </div>
-          <div className="w-px h-8 bg-border" />
-          <div className="flex flex-col gap-1">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Distance</span>
-            <span className="font-bold">₹5.00/km</span>
+          <div className="w-px h-10 bg-border/50" />
+          <div className="text-center">
+            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest block mb-1">Ride</span>
+            <span className="font-bold text-sm">₹5/km</span>
           </div>
-          <div className="w-px h-8 bg-border" />
-          <div className="flex flex-col gap-1">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Insurance</span>
-            <span className="font-bold text-green-600">Free</span>
+          <div className="w-px h-10 bg-border/50" />
+          <div className="text-center">
+            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest block mb-1">Insured</span>
+            <span className="font-bold text-sm text-green-600">Yes</span>
           </div>
         </div>
 
-        {/* Action Button */}
+        {/* Final Action */}
         <Button 
           onClick={handleUnlock} 
           className={cn(
-            "w-full h-20 rounded-[2.5rem] text-white font-black text-xl shadow-2xl transition-all hover:scale-[1.02] active:scale-95 group",
-            selectedScooter.color === 'blue' ? "bg-blue-600 hover:bg-blue-700 shadow-blue-500/30" : "bg-red-600 hover:bg-red-700 shadow-red-500/30"
+            "w-full h-20 rounded-[2.5rem] text-white font-black text-xl shadow-2xl transition-all hover:scale-[1.02] active:scale-95 group relative overflow-hidden",
+            selectedScooter.color === 'blue' ? "bg-blue-600 hover:bg-blue-700 shadow-blue-500/40" : "bg-red-600 hover:bg-red-700 shadow-red-500/40"
           )}
         >
-          <Zap className="w-6 h-6 mr-3 fill-accent stroke-accent group-hover:animate-bounce" />
+          <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+          <Zap className="w-6 h-6 mr-3 fill-accent stroke-accent group-hover:rotate-12 transition-transform" />
           START {selectedScooter.color.toUpperCase()} RIDE
         </Button>
 
-        <p className="text-center text-[10px] font-bold text-muted-foreground/40 uppercase tracking-[0.3em] pt-6 pb-2">
-          Secure Bluetooth Pairing • Raipur Smart Mobility
+        <p className="text-center text-[10px] font-bold text-muted-foreground/40 uppercase tracking-[0.3em] pt-8 pb-2">
+          Ready for Raipur Roads • EasyRide Smart Mobility
         </p>
       </div>
     </div>
