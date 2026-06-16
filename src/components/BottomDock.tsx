@@ -18,7 +18,7 @@ export function BottomDock() {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-50 px-4 pb-6 pt-2 pointer-events-none">
+    <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-50 px-4 pb-6 pt-2 pointer-events-none md:hidden">
       <nav className="glass-dock w-full rounded-[2.5rem] flex items-center justify-between p-2 pointer-events-auto">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
