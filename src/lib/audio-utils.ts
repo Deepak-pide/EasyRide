@@ -1,45 +1,26 @@
 /**
- * @fileOverview Utility for playing pre-loaded UI sounds to ensure zero-latency feedback.
+ * @fileOverview Utility for playing UI sounds. 
+ * Optimized to ensure sound playback does not block the UI thread or navigation.
  */
 
-// Singleton pattern to pre-load audio and avoid lag during first play
-let tapAudio: HTMLAudioElement | null = null;
-let unlockAudio: HTMLAudioElement | null = null;
+const playSound = (path: string) => {
+  if (typeof window === 'undefined') return;
 
-const getTapAudio = () => {
-  if (typeof window === 'undefined') return null;
-  if (!tapAudio) {
-    tapAudio = new Audio('/tap.mp3');
-    tapAudio.load();
-  }
-  return tapAudio;
-};
-
-const getUnlockAudio = () => {
-  if (typeof window === 'undefined') return null;
-  if (!unlockAudio) {
-    unlockAudio = new Audio('/unlock.wav');
-    unlockAudio.load();
-  }
-  return unlockAudio;
+  // Use a fresh audio instance for each play to allow overlapping sounds
+  // and ensure navigation isn't blocked by a singleton's state.
+  const audio = new Audio(path);
+  audio.currentTime = 0;
+  
+  // We don't await the play() promise to ensure it's completely non-blocking.
+  audio.play().catch(() => {
+    // Silently fail if blocked by browser policy (common for first-time interactions)
+  });
 };
 
 export const playTapSound = () => {
-  const audio = getTapAudio();
-  if (audio) {
-    audio.currentTime = 0;
-    audio.play().catch(() => {
-      // Silently fail if blocked by browser policy
-    });
-  }
+  playSound('/tap.mp3');
 };
 
 export const playUnlockSound = () => {
-  const audio = getUnlockAudio();
-  if (audio) {
-    audio.currentTime = 0;
-    audio.play().catch(() => {
-      // Silently fail if blocked by browser policy
-    });
-  }
+  playSound('/unlock.wav');
 };

@@ -18,12 +18,13 @@ const navItems = [
 export function BottomDock() {
   const pathname = usePathname();
   
+  // Hide navigation during active ride or scan session to focus user attention
   const isImmersive = pathname === '/ride' || pathname === '/scan';
   if (isImmersive) return null;
 
   return (
     <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-50 px-4 pb-6 pt-2 pointer-events-none md:hidden">
-      <nav className="glass-dock w-full rounded-[2.5rem] flex items-center justify-between p-2 pointer-events-auto border border-primary/10">
+      <nav className="glass-dock w-full rounded-[2.5rem] flex items-center justify-between p-2 pointer-events-auto border border-primary/10 bg-white/70 backdrop-blur-lg shadow-2xl">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
@@ -60,8 +61,8 @@ export function BottomDock() {
                 <Icon className={cn("w-6 h-6", isActive ? "stroke-[2.5px]" : "stroke-[2px]")} />
               </div>
               <span className={cn(
-                "text-[10px] mt-1 font-medium",
-                isActive ? "text-primary font-bold" : "text-muted-foreground"
+                "text-[10px] mt-1 font-bold uppercase tracking-widest",
+                isActive ? "text-primary" : "text-muted-foreground"
               )}>
                 {item.label}
               </span>

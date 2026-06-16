@@ -1,9 +1,9 @@
 "use client"
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { X, Zap, BatteryFull, MapPin, Star, ShieldCheck, ChevronLeft, ChevronRight, Unlock, Sparkles } from 'lucide-react';
+import { X, Zap, BatteryFull, MapPin, ShieldCheck, ChevronLeft, ChevronRight, Unlock, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -61,15 +61,15 @@ export default function ScanPage() {
 
   const handlePrev = () => {
     if (selectedIndex > 0) {
-      setSelectedIndex(selectedIndex - 1);
       playTapSound();
+      setSelectedIndex(selectedIndex - 1);
     }
   };
 
   const handleNext = () => {
     if (selectedIndex < mockScooters.length - 1) {
-      setSelectedIndex(selectedIndex + 1);
       playTapSound();
+      setSelectedIndex(selectedIndex + 1);
     }
   };
 

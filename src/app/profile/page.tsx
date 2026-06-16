@@ -12,7 +12,6 @@ import {
   ChevronRight, 
   CreditCard, 
   Trophy,
-  Leaf,
   Bell,
   Download
 } from 'lucide-react';
@@ -70,7 +69,7 @@ export default function ProfilePage() {
           </Avatar>
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <h2 className="text-xl font-headline">{user.name}</h2>
+              <h2 className="text-xl font-headline font-bold">{user.name}</h2>
               <Badge variant="secondary" className="bg-accent/20 text-accent-foreground text-[10px] font-black uppercase">GOLD</Badge>
             </div>
             <p className="text-muted-foreground text-xs font-medium">{user.email}</p>
@@ -87,7 +86,7 @@ export default function ProfilePage() {
         >
           <div className="flex items-center gap-3">
             <Download className="w-6 h-6 shrink-0" />
-            <span className="opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">DOWNLOAD APP</span>
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap uppercase tracking-widest text-xs">Download App</span>
           </div>
         </Button>
       </div>
@@ -95,19 +94,19 @@ export default function ProfilePage() {
       <div className="px-6 grid grid-cols-2 gap-4 mb-8">
         <Card className="p-5 rounded-[2rem] border-none bg-primary text-white shadow-lg overflow-hidden relative">
           <Wallet className="w-6 h-6 text-accent mb-3" />
-          <p className="text-white/60 text-[10px] font-bold uppercase tracking-widest">Balance</p>
-          <p className="text-2xl font-headline">₹{user.balance}</p>
+          <p className="text-white/60 text-[10px] font-black uppercase tracking-widest">Balance</p>
+          <p className="text-2xl font-headline font-bold">₹{user.balance}</p>
         </Card>
 
         <Card className="p-5 rounded-[2rem] border-none bg-accent shadow-lg text-accent-foreground">
           <Trophy className="w-6 h-6 mb-3" />
-          <p className="text-accent-foreground/60 text-[10px] font-bold uppercase tracking-widest">Rewards</p>
-          <p className="text-2xl font-headline">1,240</p>
+          <p className="text-accent-foreground/60 text-[10px] font-black uppercase tracking-widest">Rewards</p>
+          <p className="text-2xl font-headline font-bold">1,240</p>
         </Card>
       </div>
 
       <div className="px-6 space-y-3">
-        <h3 className="font-headline text-sm uppercase tracking-widest text-muted-foreground mb-4 px-2">Settings</h3>
+        <h3 className="font-headline text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground mb-4 px-2">Settings</h3>
         {menuItems.map((item, idx) => {
           const Icon = item.icon;
           return (
