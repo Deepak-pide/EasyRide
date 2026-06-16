@@ -6,10 +6,14 @@ import { usePathname } from 'next/navigation';
 import { Map, Zap, History, Leaf, User, Bike } from 'lucide-react';
 import { cn } from '@/lib/utils';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Button } from '@/components/ui/button';
 import { playTapSound } from '@/lib/sound-utils';
 =======
 >>>>>>> 3f0c062 (still not working page not loading what could be cause trobleshoot and t)
+=======
+import { playTapSound } from '@/lib/audio-utils';
+>>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
 
 const navItems = [
   { icon: Map, label: 'Explore', href: '/' },
@@ -25,10 +29,14 @@ export function Navbar() {
     <header className="hidden md:block sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-8 mx-auto max-w-7xl">
 <<<<<<< HEAD
+<<<<<<< HEAD
         <Link href="/" onClick={playTapSound} className="flex items-center gap-2">
           <div className="bg-primary p-1.5 rounded-lg">
 =======
         <Link href="/" className="flex items-center gap-2 group">
+=======
+        <Link href="/" onClick={playTapSound} className="flex items-center gap-2 group">
+>>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
           <div className="bg-primary p-1.5 rounded-lg group-hover:scale-110 transition-transform">
 >>>>>>> 3f0c062 (still not working page not loading what could be cause trobleshoot and t)
             <Bike className="w-6 h-6 text-white" />
@@ -66,6 +74,7 @@ export function Navbar() {
 =======
         <Link 
           href="/scan"
+          onClick={playTapSound}
           className="bg-accent text-accent-foreground font-black rounded-full px-6 py-2 flex items-center gap-2 shadow-lg shadow-accent/20 hover:scale-105 active:scale-95 transition-all"
         >
           <Zap className="w-4 h-4 fill-current" />

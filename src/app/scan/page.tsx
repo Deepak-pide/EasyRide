@@ -3,12 +3,16 @@
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { X, Zap, BatteryFull, MapPin, Star, ShieldCheck, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Zap, BatteryFull, MapPin, Star, ShieldCheck, ChevronLeft, ChevronRight, Lock, Unlock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+<<<<<<< HEAD
 import { playUnlockSound, playTapSound } from '@/lib/sound-utils';
+=======
+import { playTapSound, playUnlockSound } from '@/lib/audio-utils';
+>>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
 
 const mockScooters = [
   { id: 'ER-BLUE-01', battery: 94, range: 48, condition: 'New', price: '₹5/km', color: 'blue', name: 'Azure Glide' },
@@ -51,25 +55,46 @@ const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boole
 export default function ScanPage() {
   const router = useRouter();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isUnlocking, setIsUnlocking] = useState(false);
   const touchStart = useRef<number | null>(null);
   const selectedScooter = mockScooters[selectedIndex];
 
   const handleUnlock = () => {
+<<<<<<< HEAD
     playUnlockSound();
     router.push(`/ride?id=${selectedScooter.id}`);
+=======
+    setIsUnlocking(true);
+    playUnlockSound();
+    
+    // Animate for 1.5 seconds before redirecting
+    setTimeout(() => {
+      router.push(`/ride?id=${selectedScooter.id}`);
+    }, 1800);
+>>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
   };
 
   const handlePrev = () => {
     if (selectedIndex > 0) {
+<<<<<<< HEAD
       playTapSound();
       setSelectedIndex(selectedIndex - 1);
+=======
+      setSelectedIndex(selectedIndex - 1);
+      playTapSound();
+>>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
     }
   };
 
   const handleNext = () => {
     if (selectedIndex < mockScooters.length - 1) {
+<<<<<<< HEAD
       playTapSound();
       setSelectedIndex(selectedIndex + 1);
+=======
+      setSelectedIndex(selectedIndex + 1);
+      playTapSound();
+>>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
     }
   };
 
@@ -88,6 +113,22 @@ export default function ScanPage() {
 
   return (
     <div className="min-h-screen bg-[#0F172A] flex flex-col relative overflow-hidden selection:bg-none">
+      {/* Unlock Animation Overlay */}
+      {isUnlocking && (
+        <div className="fixed inset-0 z-[100] bg-green-500/90 backdrop-blur-xl flex flex-col items-center justify-center animate-in fade-in duration-500">
+           <div className="relative">
+              <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(255,255,255,0.5)] animate-bounce">
+                <Unlock className="w-16 h-16 text-green-600 animate-in zoom-in spin-in duration-700" />
+              </div>
+              <div className="absolute inset-0 bg-white rounded-full animate-ping opacity-20" />
+           </div>
+           <h2 className="mt-8 text-4xl font-headline font-black text-white tracking-tighter uppercase italic animate-pulse">
+             System Unlocked
+           </h2>
+           <p className="text-white/60 font-bold uppercase tracking-[0.3em] text-xs mt-2">Ready to Ride</p>
+        </div>
+      )}
+
       <div className={cn(
         "absolute top-0 left-1/2 -translate-x-1/2 w-[180%] h-[70vh] transition-colors duration-1000 blur-[140px] opacity-25 pointer-events-none",
         selectedScooter.color === 'blue' ? "bg-blue-600" : "bg-red-600"
@@ -97,10 +138,14 @@ export default function ScanPage() {
         <Button 
           variant="ghost" 
           size="icon" 
+<<<<<<< HEAD
           onClick={() => {
             playTapSound();
             router.back();
           }} 
+=======
+          onClick={() => { playTapSound(); router.back(); }} 
+>>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
           className="rounded-full bg-white/10 backdrop-blur-xl hover:bg-white/20 transition-all border border-white/10"
         >
           <X className="w-6 h-6" />
@@ -154,8 +199,13 @@ export default function ScanPage() {
               key={scooter.id}
               onClick={() => {
                 if (selectedIndex !== idx) {
+<<<<<<< HEAD
                   playTapSound();
                   setSelectedIndex(idx);
+=======
+                  setSelectedIndex(idx);
+                  playTapSound();
+>>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
                 }
               }}
               className={cn(
@@ -230,20 +280,9 @@ export default function ScanPage() {
           </Card>
         </div>
 
-        <div className="flex justify-center gap-12 px-6 mb-10">
-          <div className="text-center">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest block mb-1">Ride</span>
-            <span className="font-bold text-sm">₹5/km</span>
-          </div>
-          <div className="w-px h-10 bg-border/50" />
-          <div className="text-center">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest block mb-1">Insured</span>
-            <span className="font-bold text-sm text-green-600">Yes</span>
-          </div>
-        </div>
-
         <Button 
           onClick={handleUnlock} 
+          disabled={isUnlocking}
           className={cn(
             "w-full h-20 rounded-[2.5rem] text-white font-black text-xl shadow-2xl transition-all hover:scale-[1.02] active:scale-95 group relative overflow-hidden",
             selectedScooter.color === 'blue' ? "bg-blue-600 hover:bg-blue-700 shadow-blue-500/40" : "bg-red-600 hover:bg-red-700 shadow-red-500/40"
@@ -251,7 +290,7 @@ export default function ScanPage() {
         >
           <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
           <Zap className="w-6 h-6 mr-3 fill-accent stroke-accent group-hover:rotate-12 transition-transform" />
-          START {selectedScooter.color.toUpperCase()} RIDE
+          {isUnlocking ? "UNLOCKING..." : `START ${selectedScooter.color.toUpperCase()} RIDE`}
         </Button>
 
         <p className="text-center text-[10px] font-bold text-muted-foreground/40 uppercase tracking-[0.3em] pt-8 pb-2">
