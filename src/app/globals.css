@@ -61,3 +61,25 @@
   content: '';
   @apply absolute w-10 h-10 bg-primary/20 rounded-full animate-ping;
 }
+
+/* Custom spacing for buttons with icons */
+.h-18 {
+  height: 4.5rem;
+}
+
+/* Custom rounded corners for high-impact cards */
+.rounded-4xl {
+  border-radius: 2rem;
+}
+
+.rounded-5xl {
+  border-radius: 3rem;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
