@@ -1,0 +1,164 @@
+"use client"
+
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Zap, Timer, MapPin, Navigation, Power, Lock, Wind, BatteryFull } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { suggestBatteryEfficientRoute } from '@/ai/flows/battery-efficient-route-suggestion';
+import { useToast } from '@/hooks/use-toast';
+
+export default function RidePage() {
+  const [distance, setDistance] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [battery, setBattery] = useState(88);
+  const [suggestion, setSuggestion] = useState<any>(null);
+  const [isLoadingSuggestion, setIsLoadingSuggestion] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const RATE_PER_KM = 5;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDistance(prev => +(prev + 0.05).toFixed(2));
+      setDuration(prev => prev + 1);
+      if (duration % 60 === 0) setBattery(prev => Math.max(0, prev - 1));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [duration]);
+
+  const handleSuggestRoute = async () => {
+    setIsLoadingSuggestion(true);
+    try {
+      const result = await suggestBatteryEfficientRoute({
+        startLocation: { latitude: 12.9716, longitude: 77.5946 },
+        endLocation: { latitude: 12.9352, longitude: 77.6245 }
+      });
+      setSuggestion(result);
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Route AI Offline",
+        description: "Could not fetch battery efficient route at this time."
+      });
+    } finally {
+      setIsLoadingSuggestion(false);
+    }
+  };
+
+  const endTrip = () => {
+    router.push(`/eco?dist=${distance}&dur=${duration}`);
+  };
+
+  const formatTime = (sec: number) => {
+    const mins = Math.floor(sec / 60);
+    const secs = sec % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="min-h-screen bg-primary text-white p-6 pb-32">
+      <div className="flex justify-between items-center mb-8">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center">
+            <Zap className="w-6 h-6 text-accent fill-accent" />
+          </div>
+          <div>
+            <h1 className="font-headline text-xl">Active Ride</h1>
+            <p className="text-white/60 text-xs font-bold uppercase tracking-widest">ID: #ER-9041</p>
+          </div>
+        </div>
+        <div className="bg-white/20 backdrop-blur px-4 py-2 rounded-2xl flex items-center gap-2">
+          <BatteryFull className="w-4 h-4 text-green-400" />
+          <span className="font-bold">{battery}%</span>
+        </div>
+      </div>
+
+      {/* Main Odometer */}
+      <div className="flex flex-col items-center py-8 mb-8">
+        <div className="relative">
+          <div className="w-64 h-64 rounded-full border-[12px] border-white/10 flex flex-col items-center justify-center">
+            <p className="text-white/60 text-xs font-bold uppercase tracking-[0.2em] mb-1">Distance</p>
+            <h2 className="text-7xl font-headline font-bold mb-2">{distance.toFixed(2)}</h2>
+            <p className="text-2xl font-headline text-accent">KM</p>
+          </div>
+          {/* Decorative rotating accent */}
+          <div className="absolute inset-0 border-[12px] border-transparent border-t-accent rounded-full animate-spin [animation-duration:10s]" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <Card className="bg-white/10 backdrop-blur border-none p-5 rounded-[2rem] text-white">
+          <p className="text-xs text-white/50 font-bold uppercase tracking-widest mb-2">Duration</p>
+          <div className="flex items-center gap-3">
+            <Timer className="w-5 h-5 text-accent" />
+            <p className="text-xl font-headline">{formatTime(duration)}</p>
+          </div>
+        </Card>
+        <Card className="bg-white/10 backdrop-blur border-none p-5 rounded-[2rem] text-white">
+          <p className="text-xs text-white/50 font-bold uppercase tracking-widest mb-2">Cost (Est)</p>
+          <div className="flex items-center gap-3">
+            <Zap className="w-5 h-5 text-accent" />
+            <p className="text-xl font-headline">₹{(distance * RATE_PER_KM).toFixed(2)}</p>
+          </div>
+        </Card>
+      </div>
+
+      {/* AI Suggestion Area */}
+      <Card className="bg-white/10 backdrop-blur border-none p-6 rounded-[2.5rem] mb-6 overflow-hidden relative">
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center gap-3">
+            <Navigation className="w-5 h-5 text-accent" />
+            <h3 className="font-headline font-bold">Predictive Route AI</h3>
+          </div>
+          {!suggestion && (
+            <Button 
+              size="sm" 
+              onClick={handleSuggestRoute} 
+              disabled={isLoadingSuggestion}
+              className="bg-accent text-accent-foreground font-bold rounded-xl"
+            >
+              {isLoadingSuggestion ? "Thinking..." : "Optimize"}
+            </Button>
+          )}
+        </div>
+
+        {suggestion ? (
+          <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2">
+            <p className="text-sm text-white/80 leading-relaxed">{suggestion.reasoning}</p>
+            <div className="flex gap-3">
+              <div className="bg-white/10 px-3 py-2 rounded-xl text-xs font-bold text-accent">
+                {suggestion.estimatedDistanceKm.toFixed(1)} KM
+              </div>
+              <div className="bg-green-500/20 px-3 py-2 rounded-xl text-xs font-bold text-green-400">
+                {suggestion.estimatedBatterySavingsPercent}% Efficient
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm text-white/40">Tap optimize to find the most battery-efficient path using real-time terrain data.</p>
+        )}
+      </Card>
+
+      {/* Control Actions */}
+      <div className="fixed bottom-0 left-0 right-0 p-6 pointer-events-none">
+        <div className="max-w-lg mx-auto flex gap-4 pointer-events-auto">
+          <Button variant="outline" className="flex-1 h-16 rounded-[2rem] border-white/20 bg-white/10 text-white font-bold text-lg hover:bg-white/20">
+            <Lock className="w-6 h-6 mr-2" />
+            PAUSE
+          </Button>
+          <Button 
+            onClick={endTrip}
+            className="flex-1 h-16 rounded-[2rem] bg-accent text-accent-foreground font-black text-lg shadow-[0_10px_40px_rgba(255,235,51,0.3)]"
+          >
+            <Power className="w-6 h-6 mr-2" />
+            END RIDE
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
