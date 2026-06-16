@@ -1,4 +1,3 @@
-
 "use client"
 
 import React, { useState, useCallback, useEffect } from 'react';
@@ -124,40 +123,43 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
             <div 
               key={station.id}
               className={cn(
-                "absolute transition-all cursor-pointer z-10",
-                isNearest ? "scale-110 z-20" : "hover:scale-105"
+                "absolute transition-all cursor-pointer",
+                isNearest ? "z-30" : "z-10"
               )}
               style={{ 
-                top: `${25 + (idx % 3) * 20}%`, 
-                left: `${15 + (idx % 4) * 20}%` 
+                top: `${25 + (idx % 3) * 18}%`, 
+                left: `${15 + (idx % 4) * 22}%` 
               }}
             >
               <div className="relative flex flex-col items-center">
                   <Card className={cn(
-                    "bg-white/95 backdrop-blur-sm p-2 rounded-2xl shadow-xl border-2 transition-all group",
-                    isNearest ? "border-primary ring-4 ring-primary/20 scale-110" : "border-primary/20 hover:border-primary"
+                    "bg-white/95 backdrop-blur-sm p-2 rounded-2xl shadow-xl border-2 transition-all group min-w-[100px]",
+                    isNearest ? "border-primary ring-4 ring-primary/20" : "border-primary/10 hover:border-primary/40"
                   )}>
-                      <div className={cn(
-                        "p-2 rounded-xl text-white transition-transform",
-                        isNearest ? "bg-primary" : "bg-primary/60 group-hover:rotate-12 group-hover:bg-primary"
-                      )}>
-                          {isNearest ? <Sparkles className="w-4 h-4 fill-white" /> : <Navigation className="w-4 h-4 fill-white" />}
-                      </div>
-                      <div className="flex flex-col pr-1">
-                          <span className={cn(
-                            "text-[10px] font-black uppercase leading-tight",
-                            isNearest ? "text-primary" : "text-primary/60"
-                          )}>
-                            {isNearest ? 'NEAREST' : `${station.available} Available`}
-                          </span>
-                          <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight truncate max-w-[80px]">
-                            {station.label}
-                          </span>
+                      <div className="flex items-center gap-2">
+                        <div className={cn(
+                          "p-2 rounded-xl text-white transition-transform shrink-0",
+                          isNearest ? "bg-primary" : "bg-primary/40 group-hover:bg-primary/60"
+                        )}>
+                            {isNearest ? <Sparkles className="w-4 h-4 fill-white" /> : <Navigation className="w-4 h-4 fill-white" />}
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                            <span className={cn(
+                              "text-[9px] font-black uppercase leading-tight truncate",
+                              isNearest ? "text-primary" : "text-primary/60"
+                            )}>
+                              {isNearest ? 'NEAREST' : `${station.available} Units`}
+                            </span>
+                            <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight truncate max-w-[70px]">
+                              {station.label}
+                            </span>
+                        </div>
                       </div>
                   </Card>
+                  {/* Anchor Point */}
                   <div className={cn(
-                    "w-3 h-3 rounded-full mt-[-4px] shadow-lg border-2 border-white animate-pulse",
-                    isNearest ? "bg-primary h-4 w-4" : "bg-primary"
+                    "w-3 h-3 rounded-full mt-[-4px] shadow-lg border-2 border-white relative z-0",
+                    isNearest ? "bg-primary animate-pulse" : "bg-primary/40"
                   )} />
               </div>
             </div>
@@ -165,7 +167,7 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
         })}
 
         {/* User Marker */}
-        <div className="absolute top-[60%] left-[45%] transform -translate-x-1/2 -translate-y-1/2 z-20">
+        <div className="absolute top-[65%] left-[40%] transform -translate-x-1/2 -translate-y-1/2 z-20">
           <div className="relative flex items-center justify-center">
             <div className="w-16 h-16 bg-blue-500/20 rounded-full animate-ping absolute" />
             <div className="w-10 h-10 bg-blue-600 rounded-full border-4 border-white shadow-2xl flex items-center justify-center">
@@ -175,12 +177,12 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
         </div>
 
         {/* Simulation Indicator */}
-        <div className="absolute top-6 left-6 z-50">
-          <div className="bg-white/90 backdrop-blur-md shadow-2xl px-5 py-2.5 rounded-full border border-primary/10 flex items-center gap-3">
-            <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
+        <div className="absolute top-4 left-4 z-50">
+          <div className="bg-white/90 backdrop-blur-md shadow-xl px-4 py-2 rounded-full border border-primary/10 flex items-center gap-2.5">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
             <div className="flex flex-col">
-                <span className="font-black text-[10px] tracking-[0.2em] uppercase text-primary leading-none">RAIPUR PROTOTYPE</span>
-                <span className="text-[7px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Live Fleet Active</span>
+                <span className="font-black text-[9px] tracking-[0.1em] uppercase text-primary leading-none">RAIPUR PROTOTYPE</span>
+                <span className="text-[7px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">Live Fleet Status</span>
             </div>
           </div>
         </div>
@@ -210,27 +212,34 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
             >
               <div className={cn(
                 "transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all",
-                isNearest ? "z-50 scale-110" : "z-10"
+                isNearest ? "z-50" : "z-10"
               )}>
-                <div className="relative flex items-center justify-center">
+                <div className="relative flex flex-col items-center">
                   <div className={cn(
-                    "absolute bg-primary/20 rounded-full animate-ping opacity-75",
+                    "absolute bg-primary/10 rounded-full animate-ping opacity-75",
                     isNearest ? "w-16 h-16" : "w-12 h-12"
                   )} />
                   <Card className={cn(
-                    "relative p-2 rounded-2xl shadow-xl border-2 flex items-center gap-2",
-                    isNearest ? "border-primary bg-white ring-4 ring-primary/10" : "border-primary bg-white/90"
+                    "relative p-2 rounded-2xl shadow-xl border-2 flex items-center gap-2 min-w-[100px]",
+                    isNearest ? "border-primary bg-white ring-4 ring-primary/10" : "border-primary/20 bg-white/90"
                   )}>
-                    <div className="bg-primary p-1.5 rounded-lg text-white">
+                    <div className={cn(
+                      "p-1.5 rounded-lg text-white",
+                      isNearest ? "bg-primary" : "bg-primary/40"
+                    )}>
                       {isNearest ? <Sparkles className="w-4 h-4 fill-white" /> : <Navigation className="w-4 h-4 fill-white" />}
                     </div>
-                    <div className="flex flex-col pr-1">
-                      <span className="font-black text-[10px] text-primary leading-tight">
-                        {isNearest ? 'NEAREST' : `${station.available} Available`}
+                    <div className="flex flex-col min-w-0 pr-1">
+                      <span className="font-black text-[9px] text-primary leading-tight truncate">
+                        {isNearest ? 'NEAREST' : `${station.available} Units`}
                       </span>
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight">{station.label}</span>
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight truncate max-w-[70px]">{station.label}</span>
                     </div>
                   </Card>
+                  <div className={cn(
+                    "w-3 h-3 rounded-full mt-[-4px] shadow-lg border-2 border-white z-0",
+                    isNearest ? "bg-primary animate-pulse" : "bg-primary/40"
+                  )} />
                 </div>
               </div>
             </OverlayView>

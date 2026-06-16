@@ -1,4 +1,3 @@
-
 "use client"
 
 import React, { useState } from 'react';
@@ -23,7 +22,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background font-body">
+    <div className="flex flex-col min-h-screen bg-background font-body overflow-x-hidden">
       {/* Top Search Section - Sticky for accessibility */}
       <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-primary/5 px-6 pt-10 pb-4">
         <div className="relative max-w-lg mx-auto">
@@ -37,16 +36,16 @@ export default function Home() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col pb-32 max-w-lg mx-auto w-full">
-        {/* Map Content - Centered and impactful */}
-        <div className="w-full h-[35vh] min-h-[320px] relative px-4 pt-4">
-          <div className="w-full h-full rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white relative">
+        {/* Map Content - Properly contained to avoid overlap */}
+        <div className="w-full h-[40vh] min-h-[350px] relative px-4 pt-4 shrink-0">
+          <div className="w-full h-full rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white relative bg-white">
             <LiveMap onNearestStationFound={handleNearestStationFound} />
           </div>
         </div>
 
-        {/* Info & Stats Section */}
-        <div className="px-6 -mt-10 relative z-30 space-y-6">
-          {/* Welcome Card */}
+        {/* Info & Stats Section - Offset adjusted for clean stacking */}
+        <div className="px-6 -mt-12 relative z-30 space-y-6">
+          {/* Main Welcome Card */}
           <Card className="p-8 rounded-[3.5rem] border-none shadow-2xl bg-white/95 backdrop-blur-md">
             <div className="flex justify-between items-start mb-6">
               <div className="space-y-1">
@@ -54,13 +53,13 @@ export default function Home() {
                     <h1 className="text-3xl font-headline font-black tracking-tighter">EasyRide</h1>
                     <Sparkles className="w-5 h-5 text-accent fill-accent" />
                 </div>
-                {nearestStation ? (
+                {!nearestStation ? (
+                   <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest animate-pulse">Locating Fleet...</p>
+                ) : (
                   <div className="flex items-center gap-2 text-primary font-black animate-in fade-in slide-in-from-left-2 duration-500">
                     <Navigation className="w-3 h-3 fill-primary" />
-                    <p className="text-[10px] uppercase tracking-widest">{nearestStation.label} • {nearestStation.distance}km</p>
+                    <p className="text-[10px] uppercase tracking-widest">RAIPUR FLEET ACTIVE</p>
                   </div>
-                ) : (
-                  <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-widest">Locating Fleet...</p>
                 )}
               </div>
               <div className="bg-primary/10 px-4 py-2 rounded-2xl flex items-center gap-2">
@@ -92,18 +91,20 @@ export default function Home() {
             
             {nearestStation && (
               <div className="mt-6 pt-6 border-t border-primary/5 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
                       <Navigation className="w-5 h-5 text-white fill-white" />
                     </div>
-                    <div>
-                      <p className="text-[10px] font-black text-primary uppercase tracking-widest">Nearest Fleet Hub</p>
-                      <p className="text-sm font-bold text-foreground">{nearestStation.label}</p>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-black text-primary uppercase tracking-widest truncate">Nearest Fleet Hub</p>
+                      <p className="text-sm font-bold text-foreground truncate">{nearestStation.label}</p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-headline font-black text-primary leading-none">{nearestStation.distance} <span className="text-[10px] uppercase">km</span></p>
+                  <div className="text-right shrink-0">
+                    <p className="text-lg font-headline font-black text-primary leading-none">
+                      {nearestStation.distance} <span className="text-[10px] uppercase">km</span>
+                    </p>
                     <p className="text-[8px] font-bold text-muted-foreground uppercase mt-1">Walk: 12m</p>
                   </div>
                 </div>
@@ -111,9 +112,9 @@ export default function Home() {
             )}
           </Card>
 
-          {/* Localized Raipur Hero */}
+          {/* Localized Raipur Hero - Stacked naturally below the main card */}
           {heroImage && (
-            <div className="w-full h-32 rounded-[3rem] overflow-hidden relative shadow-xl border-4 border-white group transition-all hover:shadow-2xl">
+            <div className="w-full h-36 rounded-[3rem] overflow-hidden relative shadow-xl border-4 border-white group transition-all hover:shadow-2xl">
               <Image 
                 src={heroImage.imageUrl}
                 alt={heroImage.description}
@@ -121,21 +122,21 @@ export default function Home() {
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
                 data-ai-hint={heroImage.imageHint}
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/40 to-transparent flex flex-col justify-center px-8">
-                <h2 className="text-white font-headline font-black text-3xl italic tracking-tighter leading-none">RIDE RAIPUR</h2>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/40 to-transparent flex flex-col justify-center px-8">
+                <h2 className="text-white font-headline font-black text-3xl italic tracking-tighter leading-none uppercase">Ride Raipur</h2>
                 <p className="text-white/80 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Smart Mobility • {new Date().getFullYear()}</p>
               </div>
             </div>
           )}
 
-          {/* Quick Tip */}
-          <div className="bg-white/50 backdrop-blur rounded-[2.5rem] p-6 border border-primary/5 flex items-center gap-4">
-            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+          {/* Quick Tip - Clean final element in the scrollable view */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-[2.5rem] p-6 border border-primary/5 flex items-center gap-4 shadow-sm">
+            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-md border border-primary/5 shrink-0">
                 <MapPin className="w-6 h-6 text-primary" />
             </div>
-            <div>
-                <p className="text-sm font-bold text-foreground/80">Heading to Marine Drive?</p>
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Typical ride: ₹20 • 12 mins</p>
+            <div className="min-w-0">
+                <p className="text-sm font-bold text-foreground/80 truncate">Heading to Marine Drive?</p>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest truncate">Typical ride: ₹20 • 12 mins</p>
             </div>
           </div>
         </div>
