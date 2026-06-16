@@ -3,10 +3,12 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { X, Zap, BatteryFull, MapPin, Star, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 // Simplified mock data with only two scooters
 const mockScooters = [
@@ -15,36 +17,30 @@ const mockScooters = [
 ];
 
 const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boolean }) => {
-  const baseColor = color === 'blue' ? '#3B82F6' : '#EF4444';
-  const shadowColor = color === 'blue' ? '#1D4ED8' : '#B91C1C';
-  
+  const imageId = color === 'blue' ? 'scooter-blue' : 'scooter-red';
+  const imageData = PlaceHolderImages.find(img => img.id === imageId);
+
   return (
     <div className={cn(
-      "relative transition-all duration-700 transform",
+      "relative transition-all duration-700 transform w-64 h-64",
       isSelected ? "scale-110 opacity-100 rotate-0" : "scale-75 opacity-20 -rotate-12 blur-[2px]"
     )}>
-      {/* "3D" CSS/SVG Scooter Representation */}
-      <svg width="220" height="220" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-2xl">
-        {/* Shadow */}
-        <ellipse cx="100" cy="170" rx="70" ry="15" fill="black" fillOpacity="0.1" />
-        
-        {/* Main Body */}
-        <path d="M40 140L60 150H140L160 140V120L140 110H60L40 120V140Z" fill={baseColor} />
-        <path d="M40 120L60 110H140L160 120L100 130L40 120Z" fill={shadowColor} />
-        
-        {/* Handle Column */}
-        <rect x="140" y="50" width="12" height="100" rx="6" transform="rotate(-15 140 50)" fill={baseColor} />
-        <rect x="135" y="45" width="40" height="8" rx="4" transform="rotate(-5 135 45)" fill="#333" />
-        
-        {/* Wheels */}
-        <circle cx="60" cy="150" r="20" fill="#1A1A1A" stroke="#333" strokeWidth="4" />
-        <circle cx="155" cy="155" r="20" fill="#1A1A1A" stroke="#333" strokeWidth="4" />
-        <circle cx="60" cy="150" r="8" fill="#444" />
-        <circle cx="155" cy="155" r="8" fill="#444" />
-        
-        {/* Glow Effect */}
-        <circle cx="100" cy="100" r="60" stroke={baseColor} strokeOpacity="0.1" strokeWidth="2" className={cn(isSelected && "animate-pulse")} />
-      </svg>
+      {imageData && (
+        <div className="relative w-full h-full drop-shadow-2xl">
+          <Image 
+            src={imageData.imageUrl}
+            alt={imageData.description}
+            fill
+            className="object-contain"
+            data-ai-hint={imageData.imageHint}
+          />
+          {/* Subtle underglow */}
+          <div className={cn(
+            "absolute bottom-4 left-1/2 -translate-x-1/2 w-3/4 h-4 blur-xl rounded-full opacity-30",
+            color === 'blue' ? "bg-blue-500" : "bg-red-500"
+          )} />
+        </div>
+      )}
     </div>
   );
 };
@@ -86,7 +82,7 @@ export default function ScanPage() {
       </div>
 
       {/* Hero Display - Two Options Side by Side */}
-      <div className="h-[45vh] flex items-center justify-center gap-8 px-6 pt-16">
+      <div className="h-[45vh] flex items-center justify-center gap-4 px-6 pt-16">
         {mockScooters.map((scooter) => (
           <div 
             key={scooter.id}
