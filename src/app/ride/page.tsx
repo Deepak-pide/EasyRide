@@ -1,11 +1,11 @@
+
 "use client"
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Zap, Timer, MapPin, Navigation, Power, Lock, Wind, BatteryFull } from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
+import { Zap, Timer, Navigation, Power, Lock, BatteryFull } from 'lucide-react';
 import { suggestBatteryEfficientRoute } from '@/ai/flows/battery-efficient-route-suggestion';
 import { useToast } from '@/hooks/use-toast';
 
@@ -33,9 +33,10 @@ export default function RidePage() {
   const handleSuggestRoute = async () => {
     setIsLoadingSuggestion(true);
     try {
+      // Updated to Raipur coordinates: Raipur Station to Telibandha
       const result = await suggestBatteryEfficientRoute({
-        startLocation: { latitude: 12.9716, longitude: 77.5946 },
-        endLocation: { latitude: 12.9352, longitude: 77.6245 }
+        startLocation: { latitude: 21.2588, longitude: 81.6298 },
+        endLocation: { latitude: 21.2384, longitude: 81.6548 }
       });
       setSuggestion(result);
     } catch (err) {
@@ -77,7 +78,6 @@ export default function RidePage() {
         </div>
       </div>
 
-      {/* Main Odometer */}
       <div className="flex flex-col items-center py-8 mb-8">
         <div className="relative">
           <div className="w-64 h-64 rounded-full border-[12px] border-white/10 flex flex-col items-center justify-center">
@@ -85,7 +85,6 @@ export default function RidePage() {
             <h2 className="text-7xl font-headline font-bold mb-2">{distance.toFixed(2)}</h2>
             <p className="text-2xl font-headline text-accent">KM</p>
           </div>
-          {/* Decorative rotating accent */}
           <div className="absolute inset-0 border-[12px] border-transparent border-t-accent rounded-full animate-spin [animation-duration:10s]" />
         </div>
       </div>
@@ -107,7 +106,6 @@ export default function RidePage() {
         </Card>
       </div>
 
-      {/* AI Suggestion Area */}
       <Card className="bg-white/10 backdrop-blur border-none p-6 rounded-[2.5rem] mb-6 overflow-hidden relative">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-3">
@@ -139,11 +137,10 @@ export default function RidePage() {
             </div>
           </div>
         ) : (
-          <p className="text-sm text-white/40">Tap optimize to find the most battery-efficient path using real-time terrain data.</p>
+          <p className="text-sm text-white/40">Tap optimize to find the most battery-efficient path in Raipur using real-time terrain data.</p>
         )}
       </Card>
 
-      {/* Control Actions */}
       <div className="fixed bottom-0 left-0 right-0 p-6 pointer-events-none">
         <div className="max-w-lg mx-auto flex gap-4 pointer-events-auto">
           <Button variant="outline" className="flex-1 h-16 rounded-[2rem] border-white/20 bg-white/10 text-white font-bold text-lg hover:bg-white/20">
