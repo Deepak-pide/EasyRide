@@ -99,22 +99,6 @@ export default function Home() {
             </div>
           </div>
         </Card>
-
-        <div className="bg-primary text-white p-6 rounded-[2.5rem] shadow-xl relative overflow-hidden group">
-          <div className="relative z-10">
-            <h2 className="text-xl font-headline mb-2">Unlock Your Ride</h2>
-            <p className="text-primary-foreground/80 text-sm mb-4">Scan the QR on any scooter near you to start.</p>
-            <Button 
-              onClick={() => window.location.href = '/scan'}
-              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-2xl h-12 shadow-lg"
-            >
-              SCAN QR CODE
-            </Button>
-          </div>
-          <div className="absolute top-0 right-0 p-4 opacity-10 scale-150 rotate-12 transition-transform group-hover:rotate-45">
-            <Zap className="w-24 h-24" />
-          </div>
-        </div>
       </div>
 
       <BottomDock />

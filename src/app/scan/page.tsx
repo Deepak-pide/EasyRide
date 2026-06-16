@@ -120,7 +120,7 @@ export default function ScanPage() {
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
-        {/* Strictly Floating Arrows over the visual area */}
+        {/* Floating Arrows */}
         <button 
           onClick={handlePrev}
           disabled={selectedIndex === 0}
@@ -232,13 +232,8 @@ export default function ScanPage() {
           </Card>
         </div>
 
-        {/* Pricing/Info Row */}
-        <div className="flex justify-between px-6 mb-10">
-          <div className="text-center">
-            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest block mb-1">Base</span>
-            <span className="font-bold text-sm">₹10</span>
-          </div>
-          <div className="w-px h-10 bg-border/50" />
+        {/* Info Row */}
+        <div className="flex justify-center gap-12 px-6 mb-10">
           <div className="text-center">
             <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest block mb-1">Ride</span>
             <span className="font-bold text-sm">₹5/km</span>
