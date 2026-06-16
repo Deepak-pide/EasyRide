@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { LiveMap } from '@/components/LiveMap';
 import { BottomDock } from '@/components/BottomDock';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Zap, MapPin, Bike, Search, Navigation, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -22,10 +21,10 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background font-body overflow-x-hidden">
-      {/* Top Search Section - Sticky for accessibility */}
-      <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-primary/5 px-6 pt-10 pb-4">
-        <div className="relative max-w-lg mx-auto">
+    <div className="flex flex-col min-h-screen bg-background font-body">
+      {/* Top Search Section */}
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-primary/5 px-6 pt-10 pb-4">
+        <div className="relative w-full">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary opacity-60" />
           <Input 
             placeholder="Where are you going in Raipur?" 
@@ -34,18 +33,16 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col pb-32 max-w-lg mx-auto w-full">
-        {/* Map Content - Properly contained to avoid overlap */}
-        <div className="w-full h-[40vh] min-h-[350px] relative px-4 pt-4 shrink-0">
-          <div className="w-full h-full rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white relative bg-white">
+      <div className="flex-1 flex flex-col pb-32 w-full">
+        {/* Map Container */}
+        <div className="w-full h-[45vh] min-h-[400px] relative px-4 pt-4 shrink-0">
+          <div className="w-full h-full rounded-[3.5rem] overflow-hidden shadow-2xl border-4 border-white relative bg-white">
             <LiveMap onNearestStationFound={handleNearestStationFound} />
           </div>
         </div>
 
-        {/* Info & Stats Section - Offset adjusted for clean stacking */}
+        {/* Dynamic Overlay Info Area */}
         <div className="px-6 -mt-12 relative z-30 space-y-6">
-          {/* Main Welcome Card */}
           <Card className="p-8 rounded-[3.5rem] border-none shadow-2xl bg-white/95 backdrop-blur-md">
             <div className="flex justify-between items-start mb-6">
               <div className="space-y-1">
@@ -97,7 +94,7 @@ export default function Home() {
                       <Navigation className="w-5 h-5 text-white fill-white" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-[10px] font-black text-primary uppercase tracking-widest truncate">Nearest Fleet Hub</p>
+                      <p className="text-[10px] font-black text-primary uppercase tracking-widest truncate">Nearest Hub</p>
                       <p className="text-sm font-bold text-foreground truncate">{nearestStation.label}</p>
                     </div>
                   </div>
@@ -112,9 +109,8 @@ export default function Home() {
             )}
           </Card>
 
-          {/* Localized Raipur Hero - Stacked naturally below the main card */}
           {heroImage && (
-            <div className="w-full h-36 rounded-[3rem] overflow-hidden relative shadow-xl border-4 border-white group transition-all hover:shadow-2xl">
+            <div className="w-full h-40 rounded-[3.5rem] overflow-hidden relative shadow-xl border-4 border-white group transition-all hover:shadow-2xl">
               <Image 
                 src={heroImage.imageUrl}
                 alt={heroImage.description}
@@ -122,20 +118,19 @@ export default function Home() {
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
                 data-ai-hint={heroImage.imageHint}
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/40 to-transparent flex flex-col justify-center px-8">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/40 to-transparent flex flex-col justify-center px-10">
                 <h2 className="text-white font-headline font-black text-3xl italic tracking-tighter leading-none uppercase">Ride Raipur</h2>
-                <p className="text-white/80 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Smart Mobility • {new Date().getFullYear()}</p>
+                <p className="text-white/80 text-[10px] font-bold uppercase tracking-[0.3em] mt-3">Smart Mobility • {new Date().getFullYear()}</p>
               </div>
             </div>
           )}
 
-          {/* Quick Tip - Clean final element in the scrollable view */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-[2.5rem] p-6 border border-primary/5 flex items-center gap-4 shadow-sm">
+          <div className="bg-white/80 backdrop-blur-sm rounded-[3rem] p-6 border border-primary/5 flex items-center gap-4 shadow-sm mb-12">
             <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-md border border-primary/5 shrink-0">
                 <MapPin className="w-6 h-6 text-primary" />
             </div>
             <div className="min-w-0">
-                <p className="text-sm font-bold text-foreground/80 truncate">Heading to Marine Drive?</p>
+                <p className="text-sm font-bold text-foreground/80 truncate font-headline">Heading to Marine Drive?</p>
                 <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest truncate">Typical ride: ₹20 • 12 mins</p>
             </div>
           </div>

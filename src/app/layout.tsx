@@ -20,9 +20,11 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased bg-background overflow-x-hidden">
-        <main className="min-h-screen pb-24">
-          {children}
-        </main>
+        <div className="min-h-screen flex flex-col items-center">
+          <main className="w-full max-w-lg min-h-screen relative bg-background shadow-2xl pb-24 lg:border-x lg:border-primary/5">
+            {children}
+          </main>
+        </div>
         <Toaster />
       </body>
     </html>
