@@ -64,9 +64,8 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
 
   useEffect(() => {
-    // Initial call to set nearest station even if geolocation fails
     if (onNearestStationFound) {
-      onNearestStationFound(mockStations[3], 1.2); // Default to Telibandha
+      onNearestStationFound(mockStations[3], 1.2); 
     }
 
     if (navigator.geolocation) {
@@ -93,14 +92,6 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
   if (isSimulation) {
     return (
       <div className="w-full h-full bg-[#E5F1FF] relative overflow-hidden">
-        {/* Stylized Simulated Map Background */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-full h-1 bg-primary/20 rotate-45" />
-          <div className="absolute top-1/2 left-0 w-full h-1 bg-primary/20" />
-          <div className="absolute top-0 left-1/2 w-1 h-full bg-primary/20" />
-          <div className="absolute top-1/3 right-1/4 w-full h-1 bg-primary/20 -rotate-12" />
-        </div>
-
         {/* Mock Markers */}
         {mockStations.map((station, idx) => (
           <div 
@@ -117,8 +108,7 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
                   <Navigation className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col pr-1">
-                  <span className="font-black text-[10px] text-primary leading-tight">{station.available} available</span>
-                  <span className="text-[8px] text-muted-foreground font-bold truncate max-w-[80px]">{station.label}</span>
+                  <span className="font-black text-[10px] text-primary leading-tight">{station.available}</span>
                 </div>
               </div>
               <div className="w-3 h-3 bg-primary rounded-full mt-[-6px] shadow-lg border-2 border-white" />
@@ -136,24 +126,12 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
           </div>
         </div>
 
-        {/* Simulation Indicator */}
-        <div className="absolute top-6 left-6 z-50">
-          <div className="bg-white/90 backdrop-blur shadow-xl px-4 py-2.5 rounded-3xl border border-white/50 flex items-center gap-3">
-            <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
-            <span className="font-headline font-black text-[10px] tracking-widest uppercase text-primary">Raipur Live Simulation</span>
+        {/* Simulation Indicator - Moved to top right for better visibility */}
+        <div className="absolute top-4 right-4 z-50">
+          <div className="bg-white/90 backdrop-blur shadow-xl px-4 py-2 rounded-full border border-white/50 flex items-center gap-3">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <span className="font-black text-[8px] tracking-[0.2em] uppercase text-primary">Live Raipur</span>
           </div>
-        </div>
-
-        {/* Info Overlay */}
-        <div className="absolute bottom-6 left-6 right-6 z-50">
-          <Card className="bg-white/95 backdrop-blur-sm p-4 rounded-[2rem] border-none shadow-2xl flex items-center gap-4">
-            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-              <Info className="w-5 h-5 text-primary" />
-            </div>
-            <p className="text-[10px] font-bold text-muted-foreground leading-snug uppercase tracking-tight">
-              Prototype Mode: Showing simulated real-time data for Raipur Hubs.
-            </p>
-          </Card>
         </div>
       </div>
     );
@@ -185,8 +163,7 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
                     <Navigation className="w-4 h-4" />
                   </div>
                   <div className="flex flex-col pr-1">
-                    <span className="font-bold text-[10px] text-primary leading-tight">{station.available} available</span>
-                    <span className="text-[8px] text-muted-foreground truncate max-w-[80px]">{station.label}</span>
+                    <span className="font-bold text-[10px] text-primary leading-tight">{station.available}</span>
                   </div>
                 </div>
               </div>

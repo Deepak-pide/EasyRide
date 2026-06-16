@@ -23,82 +23,88 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-32">
-      {/* Search Header */}
-      <div className="px-6 pt-8 pb-4 absolute top-0 left-0 right-0 z-20 flex gap-2">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+    <div className="flex flex-col min-h-screen bg-background">
+      {/* Top Search Section - Sticky for accessibility */}
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-primary/5 px-6 pt-12 pb-4">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary opacity-60" />
           <Input 
             placeholder="Where are you going in Raipur?" 
-            className="pl-10 h-12 rounded-2xl bg-white/90 backdrop-blur-md border-none shadow-xl"
+            className="pl-11 h-14 rounded-2xl bg-white border-none shadow-lg ring-1 ring-primary/5 focus:ring-primary/20 transition-all text-sm font-medium"
           />
         </div>
       </div>
 
-      {/* Map Content - Fixed Height for Mobile Viewport */}
-      <div className="h-[55vh] relative z-10">
-        <div className="absolute inset-0 rounded-b-[3rem] overflow-hidden shadow-2xl">
-          <LiveMap onNearestStationFound={handleNearestStationFound} />
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col pb-32">
+        {/* Map Content - Dynamic height that feels natural */}
+        <div className="w-full h-[40vh] min-h-[300px] relative px-4 pt-4">
+          <div className="w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white">
+            <LiveMap onNearestStationFound={handleNearestStationFound} />
+          </div>
         </div>
-      </div>
 
-      {/* Welcome Card & Info */}
-      <div className="px-6 -mt-12 relative z-30 space-y-4">
-        {heroImage && (
-          <div className="w-full h-24 rounded-[2rem] overflow-hidden relative shadow-lg">
-            <Image 
-              src={heroImage.imageUrl}
-              alt={heroImage.description}
-              fill
-              className="object-cover opacity-80"
-              data-ai-hint={heroImage.imageHint}
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/40 to-transparent flex items-center px-6">
-              <h2 className="text-white font-headline font-black text-xl italic tracking-tight">RIDE RAIPUR</h2>
+        {/* Info & Stats Section */}
+        <div className="px-6 -mt-6 relative z-30 space-y-6">
+          {/* Welcome Card */}
+          <Card className="p-8 rounded-[3rem] border-none shadow-2xl bg-white/95 backdrop-blur-md">
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h1 className="text-3xl font-headline font-black tracking-tighter mb-1">EasyRide Raipur</h1>
+                {nearestStation ? (
+                  <div className="flex items-center gap-2 text-primary font-black animate-in fade-in slide-in-from-left-2 duration-500">
+                    <Navigation className="w-4 h-4 fill-primary" />
+                    <p className="text-[10px] uppercase tracking-widest">Nearest: {nearestStation.label} ({nearestStation.distance}km)</p>
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest">Locating Fleet...</p>
+                )}
+              </div>
+              <div className="bg-primary/10 px-4 py-2 rounded-2xl flex items-center gap-2">
+                <Zap className="w-4 h-4 text-primary fill-primary" />
+                <span className="text-[10px] font-black text-primary uppercase">Best Rate</span>
+              </div>
             </div>
-          </div>
-        )}
 
-        <Card className="p-6 rounded-[2.5rem] border-none shadow-2xl bg-white/95 backdrop-blur-sm">
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <h1 className="text-2xl font-headline mb-1">EasyRide Raipur</h1>
-              {nearestStation ? (
-                <div className="flex items-center gap-2 text-primary font-bold animate-in fade-in slide-in-from-left-2 duration-500">
-                  <Navigation className="w-4 h-4 fill-primary" />
-                  <p className="text-sm">Nearest: {nearestStation.label} ({nearestStation.distance}km away)</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-secondary/20 p-5 rounded-[2rem] flex flex-col gap-2 transition-transform hover:scale-[1.02]">
+                <div className="bg-primary/20 w-10 h-10 rounded-xl flex items-center justify-center">
+                  <Bike className="w-5 h-5 text-primary" />
                 </div>
-              ) : (
-                <p className="text-muted-foreground text-sm">Finding scooters near you...</p>
-              )}
+                <div>
+                  <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest mb-0.5">In Service</p>
+                  <p className="text-xl font-headline font-bold">20 Units</p>
+                </div>
+              </div>
+              <div className="bg-secondary/20 p-5 rounded-[2rem] flex flex-col gap-2 transition-transform hover:scale-[1.02]">
+                <div className="bg-accent/20 w-10 h-10 rounded-xl flex items-center justify-center">
+                  <MapPin className="w-5 h-5 text-accent-foreground" />
+                </div>
+                <div>
+                  <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest mb-0.5">Fixed Price</p>
+                  <p className="text-xl font-headline font-bold">₹5/km</p>
+                </div>
+              </div>
             </div>
-            <div className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-primary fill-primary" />
-              <span className="text-xs font-bold text-primary">BEST PRICE</span>
-            </div>
-          </div>
+          </Card>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-secondary/30 p-4 rounded-3xl flex items-center gap-3">
-              <div className="bg-primary/20 p-2 rounded-xl">
-                <Bike className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Available</p>
-                <p className="text-lg font-headline">20 Units</p>
-              </div>
-            </div>
-            <div className="bg-secondary/30 p-4 rounded-3xl flex items-center gap-3">
-              <div className="bg-accent/20 p-2 rounded-xl">
-                <MapPin className="w-5 h-5 text-accent-foreground" />
-              </div>
-              <div>
-                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Pricing</p>
-                <p className="text-lg font-headline">₹5/km</p>
+          {/* Localized Raipur Hero - Now properly spaced */}
+          {heroImage && (
+            <div className="w-full h-28 rounded-[2.5rem] overflow-hidden relative shadow-xl border-4 border-white">
+              <Image 
+                src={heroImage.imageUrl}
+                alt={heroImage.description}
+                fill
+                className="object-cover"
+                data-ai-hint={heroImage.imageHint}
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/60 to-transparent flex flex-col justify-center px-8">
+                <h2 className="text-white font-headline font-black text-2xl italic tracking-tighter leading-none">RIDE RAIPUR</h2>
+                <p className="text-white/80 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Smart Mobility 2.0</p>
               </div>
             </div>
-          </div>
-        </Card>
+          )}
+        </div>
       </div>
 
       <BottomDock />
