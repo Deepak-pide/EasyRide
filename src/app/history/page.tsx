@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { BottomDock } from '@/components/BottomDock';
 import { Bike, Calendar, ArrowRight, TrendingUp, MapPin, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
@@ -75,8 +74,6 @@ export default function HistoryPage() {
           </Card>
         ))}
       </div>
-
-      <BottomDock />
     </div>
   );
 }

@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { LiveMap } from '@/components/LiveMap';
-import { BottomDock } from '@/components/BottomDock';
 import { Card } from '@/components/ui/card';
 import { Zap, MapPin, Bike, Search, Navigation, Sparkles, TrendingUp, ShieldCheck } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -164,8 +163,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      <BottomDock />
     </div>
   );
 }

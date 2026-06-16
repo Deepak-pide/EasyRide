@@ -1,12 +1,9 @@
-
 "use client"
 
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BottomDock } from '@/components/BottomDock';
 import { 
-  User, 
   Wallet, 
   Settings, 
   ShieldCheck, 
@@ -141,8 +138,6 @@ export default function ProfilePage() {
           LOG OUT
         </Button>
       </div>
-
-      <BottomDock />
     </div>
   );
 }

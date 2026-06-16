@@ -17,6 +17,10 @@ const navItems = [
 
 export function BottomDock() {
   const pathname = usePathname();
+  
+  // Hide navigation on immersive ride and scan screens
+  const isImmersive = pathname === '/ride' || pathname === '/scan';
+  if (isImmersive) return null;
 
   return (
     <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg z-50 px-4 pb-6 pt-2 pointer-events-none md:hidden">

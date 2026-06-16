@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { Navbar } from '@/components/Navbar';
+import { BottomDock } from '@/components/BottomDock';
 
 export const metadata: Metadata = {
   title: 'EasyRide | Smart Urban Commute',
@@ -27,6 +28,7 @@ export default function RootLayout({
             {children}
           </main>
         </div>
+        <BottomDock />
         <Toaster />
       </body>
     </html>
