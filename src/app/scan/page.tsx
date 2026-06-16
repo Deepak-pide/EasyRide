@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { X, Zap, BatteryFull, MapPin, Star, ShieldCheck, ChevronLeft, ChevronRight, Lock, Unlock } from 'lucide-react';
+import { X, Zap, BatteryFull, MapPin, Star, ShieldCheck, ChevronLeft, ChevronRight, Lock, Unlock, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -67,11 +67,15 @@ export default function ScanPage() {
     setIsUnlocking(true);
     playUnlockSound();
     
-    // Animate for 1.5 seconds before redirecting
+    // Animate for 1.8 seconds before redirecting
     setTimeout(() => {
       router.push(`/ride?id=${selectedScooter.id}`);
+<<<<<<< HEAD
     }, 1800);
 >>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
+=======
+    }, 2000);
+>>>>>>> 314c33f (add tap.mp3 to play when switched nav)
   };
 
   const handlePrev = () => {
@@ -113,19 +117,28 @@ export default function ScanPage() {
 
   return (
     <div className="min-h-screen bg-[#0F172A] flex flex-col relative overflow-hidden selection:bg-none">
-      {/* Unlock Animation Overlay */}
+      {/* Unlock Animation Overlay: "Lock Breaking" */}
       {isUnlocking && (
-        <div className="fixed inset-0 z-[100] bg-green-500/90 backdrop-blur-xl flex flex-col items-center justify-center animate-in fade-in duration-500">
+        <div className="fixed inset-0 z-[100] bg-green-500/90 backdrop-blur-3xl flex flex-col items-center justify-center animate-in fade-in duration-500">
            <div className="relative">
-              <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(255,255,255,0.5)] animate-bounce">
-                <Unlock className="w-16 h-16 text-green-600 animate-in zoom-in spin-in duration-700" />
+              <div className="w-40 h-40 bg-white rounded-full flex items-center justify-center shadow-[0_0_80px_rgba(255,255,255,0.6)] animate-in zoom-in-50 duration-500">
+                <div className="relative">
+                  <Unlock className="w-20 h-20 text-green-600 animate-in spin-in-90 duration-700" />
+                  <Sparkles className="absolute -top-4 -right-4 w-10 h-10 text-yellow-400 animate-pulse" />
+                </div>
               </div>
-              <div className="absolute inset-0 bg-white rounded-full animate-ping opacity-20" />
+              <div className="absolute inset-0 bg-white rounded-full animate-ping opacity-30" />
+              <div className="absolute inset-0 bg-green-300 rounded-full animate-pulse opacity-20 scale-125" />
            </div>
-           <h2 className="mt-8 text-4xl font-headline font-black text-white tracking-tighter uppercase italic animate-pulse">
-             System Unlocked
+           <h2 className="mt-10 text-5xl font-headline font-black text-white tracking-tighter uppercase italic drop-shadow-lg animate-in slide-in-from-bottom-8 duration-700">
+             SYSTEM UNLOCKED
            </h2>
-           <p className="text-white/60 font-bold uppercase tracking-[0.3em] text-xs mt-2">Ready to Ride</p>
+           <div className="mt-4 flex items-center gap-3">
+             <div className="h-1.5 w-12 bg-white/20 rounded-full overflow-hidden">
+               <div className="h-full bg-white animate-progress" style={{ width: '100%' }} />
+             </div>
+             <p className="text-white/80 font-black uppercase tracking-[0.4em] text-[10px]">Preparing Vehicle</p>
+           </div>
         </div>
       )}
 

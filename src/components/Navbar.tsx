@@ -30,6 +30,7 @@ export function Navbar() {
       <div className="container flex h-16 items-center justify-between px-8 mx-auto max-w-7xl">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <Link href="/" onClick={playTapSound} className="flex items-center gap-2">
           <div className="bg-primary p-1.5 rounded-lg">
 =======
@@ -37,6 +38,13 @@ export function Navbar() {
 =======
         <Link href="/" onClick={playTapSound} className="flex items-center gap-2 group">
 >>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
+=======
+        <Link 
+          href="/" 
+          onClick={playTapSound} 
+          className="flex items-center gap-2 group"
+        >
+>>>>>>> 314c33f (add tap.mp3 to play when switched nav)
           <div className="bg-primary p-1.5 rounded-lg group-hover:scale-110 transition-transform">
 >>>>>>> 3f0c062 (still not working page not loading what could be cause trobleshoot and t)
             <Bike className="w-6 h-6 text-white" />
