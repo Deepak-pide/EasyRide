@@ -23,7 +23,7 @@ const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boole
   return (
     <div className={cn(
       "relative transition-all duration-700 transform w-64 h-64",
-      isSelected ? "scale-110 opacity-100 rotate-0" : "scale-75 opacity-20 -rotate-12 blur-[2px]"
+      isSelected ? "scale-110 opacity-100 rotate-0" : "scale-75 opacity-30 -rotate-12 blur-[2px]"
     )}>
       {imageData && (
         <div className="relative w-full h-full drop-shadow-2xl">
@@ -57,7 +57,7 @@ export default function ScanPage() {
     <div className="min-h-screen bg-[#0F172A] flex flex-col relative overflow-hidden">
       {/* Background Glow */}
       <div className={cn(
-        "absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[50vh] transition-colors duration-1000 blur-[100px] opacity-20",
+        "absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[60vh] transition-colors duration-1000 blur-[100px] opacity-20",
         selectedScooter.color === 'blue' ? "bg-blue-600" : "bg-red-600"
       )} />
 
@@ -72,17 +72,17 @@ export default function ScanPage() {
           <X className="w-6 h-6" />
         </Button>
         <div className="text-center">
-          <h1 className="font-headline text-lg font-black tracking-widest uppercase">Select Ride</h1>
+          <h1 className="font-headline text-lg font-black tracking-widest uppercase text-white">Select Ride</h1>
           <p className="text-[10px] text-white/40 font-bold tracking-tighter uppercase">Raipur Fleet v3.2</p>
         </div>
         <div className="bg-white/10 backdrop-blur-lg px-3 py-1.5 rounded-full flex items-center gap-2 border border-white/5">
           <ShieldCheck className="w-4 h-4 text-green-400" />
-          <span className="text-[10px] font-black">SECURE</span>
+          <span className="text-[10px] font-black text-white">SECURE</span>
         </div>
       </div>
 
-      {/* Hero Display - Two Options Side by Side */}
-      <div className="h-[45vh] flex items-center justify-center gap-4 px-6 pt-16">
+      {/* Hero Display - Increased Height and adjusted padding */}
+      <div className="h-[55vh] flex items-center justify-center gap-4 px-6 pt-24 pb-12">
         {mockScooters.map((scooter) => (
           <div 
             key={scooter.id}
