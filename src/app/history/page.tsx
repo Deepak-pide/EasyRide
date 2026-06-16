@@ -7,11 +7,11 @@ import { Bike, Calendar, ArrowRight, TrendingUp, MapPin, Search } from 'lucide-r
 import { Input } from '@/components/ui/input';
 
 const mockHistory = [
-  { id: 1, date: 'Today, 2:45 PM', dist: 4.2, cost: 21.0, start: 'Indiranagar', end: 'Koramangala' },
-  { id: 2, date: 'Yesterday, 9:15 AM', dist: 2.8, cost: 14.0, start: 'MG Road', end: 'Indiranagar' },
-  { id: 3, date: 'Oct 24, 6:00 PM', dist: 1.5, cost: 7.5, start: 'Church St', end: 'Brigade Rd' },
-  { id: 4, date: 'Oct 23, 1:20 PM', dist: 5.6, cost: 28.0, start: 'HSR Layout', end: 'Bellandur' },
-  { id: 5, date: 'Oct 21, 10:00 AM', dist: 3.1, cost: 15.5, start: 'Jayanagar', end: 'JP Nagar' },
+  { id: 1, date: 'Today, 2:45 PM', dist: 4.2, cost: 21.0, start: 'Jaistambh Chowk', end: 'Telibandha Marine Drive' },
+  { id: 2, date: 'Yesterday, 9:15 AM', dist: 2.8, cost: 14.0, start: 'Ghadi Chowk', end: 'Sharda Chowk' },
+  { id: 3, date: 'Oct 24, 6:00 PM', dist: 1.5, cost: 7.5, start: 'Phool Chowk', end: 'Amapara' },
+  { id: 4, date: 'Oct 23, 1:20 PM', dist: 5.6, cost: 28.0, start: 'Tatibandh Chowk', end: 'Raipur Station' },
+  { id: 5, date: 'Oct 21, 10:00 AM', dist: 3.1, cost: 15.5, start: 'Santoshi Nagar', end: 'Pachpedi Naka' },
 ];
 
 export default function HistoryPage() {
@@ -19,7 +19,7 @@ export default function HistoryPage() {
     <div className="min-h-screen bg-background">
       <div className="px-6 pt-12 pb-6">
         <h1 className="text-3xl font-headline mb-2">Your Trips</h1>
-        <p className="text-muted-foreground">Review your urban commute stats.</p>
+        <p className="text-muted-foreground">Review your Raipur commute stats.</p>
       </div>
 
       {/* Summary Cards */}
@@ -44,12 +44,12 @@ export default function HistoryPage() {
       <div className="px-6 mb-6">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input placeholder="Search locations..." className="pl-10 h-12 rounded-2xl bg-white border-none shadow-sm" />
+          <Input placeholder="Search Chouks in Raipur..." className="pl-10 h-12 rounded-2xl bg-white border-none shadow-sm" />
         </div>
       </div>
 
       <div className="px-6 space-y-4 pb-12">
-        <h3 className="font-headline text-lg mb-2">Recent Journeys</h3>
+        <h3 className="font-headline text-lg mb-2">Recent Raipur Journeys</h3>
         {mockHistory.map((ride) => (
           <Card key={ride.id} className="p-4 rounded-[2rem] border-none shadow-sm hover:shadow-md transition-shadow">
             <div className="flex justify-between items-start">
@@ -61,13 +61,13 @@ export default function HistoryPage() {
                   <p className="font-bold text-sm mb-1">{ride.date}</p>
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <MapPin className="w-3 h-3" />
-                    <span>{ride.start}</span>
+                    <span className="truncate max-w-[80px]">{ride.start}</span>
                     <ArrowRight className="w-3 h-3 mx-1" />
-                    <span>{ride.end}</span>
+                    <span className="truncate max-w-[80px]">{ride.end}</span>
                   </div>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="text-right flex-shrink-0">
                 <p className="font-headline text-lg">₹{ride.cost.toFixed(0)}</p>
                 <p className="text-[10px] font-bold text-primary uppercase">{ride.dist} KM</p>
               </div>

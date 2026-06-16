@@ -1,11 +1,10 @@
-
 "use client"
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Zap, Timer, Navigation, Power, Lock, BatteryFull } from 'lucide-react';
+import { Zap, Timer, Navigation, Power, Lock, BatteryFull, MapPin } from 'lucide-react';
 import { suggestBatteryEfficientRoute } from '@/ai/flows/battery-efficient-route-suggestion';
 import { useToast } from '@/hooks/use-toast';
 
@@ -33,16 +32,16 @@ export default function RidePage() {
   const handleSuggestRoute = async () => {
     setIsLoadingSuggestion(true);
     try {
-      // Updated to Raipur coordinates: Raipur Station to Telibandha
+      // Logic centered on Raipur Station to Telibandha Marine Drive
       const result = await suggestBatteryEfficientRoute({
-        startLocation: { latitude: 21.2588, longitude: 81.6298 },
-        endLocation: { latitude: 21.2384, longitude: 81.6548 }
+        startLocation: { latitude: 21.2588, longitude: 81.6298 }, // Raipur Station
+        endLocation: { latitude: 21.2384, longitude: 81.6548 }    // Telibandha
       });
       setSuggestion(result);
     } catch (err) {
       toast({
         variant: "destructive",
-        title: "Route AI Offline",
+        title: "Raipur Route AI Offline",
         description: "Could not fetch battery efficient route at this time."
       });
     } finally {
@@ -68,8 +67,8 @@ export default function RidePage() {
             <Zap className="w-6 h-6 text-accent fill-accent" />
           </div>
           <div>
-            <h1 className="font-headline text-xl">Active Ride</h1>
-            <p className="text-white/60 text-xs font-bold uppercase tracking-widest">ID: #ER-9041</p>
+            <h1 className="font-headline text-xl">Ride in Raipur</h1>
+            <p className="text-white/60 text-xs font-bold uppercase tracking-widest">ID: #RAI-2024</p>
           </div>
         </div>
         <div className="bg-white/20 backdrop-blur px-4 py-2 rounded-2xl flex items-center gap-2">
@@ -110,7 +109,7 @@ export default function RidePage() {
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-3">
             <Navigation className="w-5 h-5 text-accent" />
-            <h3 className="font-headline font-bold">Predictive Route AI</h3>
+            <h3 className="font-headline font-bold">Raipur Efficiency AI</h3>
           </div>
           {!suggestion && (
             <Button 
@@ -119,13 +118,17 @@ export default function RidePage() {
               disabled={isLoadingSuggestion}
               className="bg-accent text-accent-foreground font-bold rounded-xl"
             >
-              {isLoadingSuggestion ? "Thinking..." : "Optimize"}
+              {isLoadingSuggestion ? "Scanning..." : "Optimize"}
             </Button>
           )}
         </div>
 
         {suggestion ? (
           <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-accent mb-1">
+              <MapPin className="w-3 h-3" />
+              <span>NAVIGATING TO MARINE DRIVE</span>
+            </div>
             <p className="text-sm text-white/80 leading-relaxed">{suggestion.reasoning}</p>
             <div className="flex gap-3">
               <div className="bg-white/10 px-3 py-2 rounded-xl text-xs font-bold text-accent">
@@ -137,7 +140,7 @@ export default function RidePage() {
             </div>
           </div>
         ) : (
-          <p className="text-sm text-white/40">Tap optimize to find the most battery-efficient path in Raipur using real-time terrain data.</p>
+          <p className="text-sm text-white/40">Find the best route through Raipur Chouks to save battery and reach faster.</p>
         )}
       </Card>
 
