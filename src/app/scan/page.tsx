@@ -23,7 +23,7 @@ const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boole
   return (
     <div className={cn(
       "relative transition-all duration-700 ease-out transform w-72 h-72",
-      isSelected ? "scale-100 opacity-100" : "scale-75 opacity-40 blur-[1px]"
+      isSelected ? "scale-100 opacity-100 rotate-0" : "scale-50 opacity-30 blur-[3px] -rotate-6"
     )}>
       {imageData && (
         <div className="relative w-full h-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
@@ -87,11 +87,12 @@ export default function ScanPage() {
       </div>
 
       {/* Sliding Carousel Display */}
-      <div className="h-[55vh] relative flex items-center justify-center pt-24 pb-12 overflow-hidden">
+      <div className="h-[55vh] relative flex items-center justify-center pt-24 pb-12">
         <div 
-          className="flex transition-transform duration-700 ease-in-out px-12"
+          className="flex transition-transform duration-700 ease-in-out items-center"
           style={{ 
-            transform: `translateX(${selectedIndex === 0 ? '15%' : '-15%'})` 
+            transform: `translateX(${selectedIndex === 0 ? '25%' : '-25%'})`,
+            width: '200%' // Allow space for the side elements to be partially visible
           }}
         >
           {mockScooters.map((scooter, idx) => (
@@ -99,7 +100,7 @@ export default function ScanPage() {
               key={scooter.id}
               onClick={() => setSelectedIndex(idx)}
               className={cn(
-                "cursor-pointer transition-all duration-700 flex flex-col items-center flex-shrink-0 px-4",
+                "cursor-pointer transition-all duration-700 flex flex-col items-center justify-center flex-1",
                 selectedIndex === idx ? "z-10" : "z-0"
               )}
             >
