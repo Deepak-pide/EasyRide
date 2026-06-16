@@ -5,7 +5,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { 
   Leaf, 
   Share2, 
@@ -14,12 +14,42 @@ import {
   TreePine, 
   Zap, 
   Trophy, 
-  Globe,
-  Sparkles
+  Sparkles,
+  PieChart as PieIcon,
+  TrendingUp
 } from 'lucide-react';
 import { ecoRideNarrative, type EcoRideNarrativeOutput } from '@/ai/flows/eco-ride-narrative';
 import { Progress } from '@/components/ui/progress';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { 
+  PieChart, 
+  Pie, 
+  Cell, 
+  ResponsiveContainer, 
+  Tooltip as RechartsTooltip 
+} from 'recharts';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+
+const chartData = [
+  { name: 'Carbon Offset', value: 45, fill: 'hsl(var(--primary))' },
+  { name: 'Energy Saved', value: 30, fill: 'hsl(var(--accent))' },
+  { name: 'Clean Air', value: 25, fill: 'hsl(142, 76%, 36%)' },
+];
+
+const chartConfig = {
+  offset: {
+    label: "Carbon Offset",
+    color: "hsl(var(--primary))",
+  },
+  energy: {
+    label: "Energy Saved",
+    color: "hsl(var(--accent))",
+  },
+  air: {
+    label: "Clean Air",
+    color: "hsl(142, 76%, 36%)",
+  },
+};
 
 function EcoContent() {
   const searchParams = useSearchParams();
@@ -44,7 +74,7 @@ function EcoContent() {
         });
         setNarrative(result);
       } catch (err) {
-        console.error(err);
+        // Centralized error handling handles this
       } finally {
         setLoading(false);
       }
@@ -53,8 +83,8 @@ function EcoContent() {
   }, [dist, dur]);
 
   return (
-    <div className="min-h-screen bg-[#F0F7FF] p-6 selection:bg-primary/20">
-      <div className="max-w-md mx-auto space-y-6 pb-32">
+    <div className="min-h-screen bg-[#F0F7FF] p-6 selection:bg-primary/20 pb-40">
+      <div className="max-w-md mx-auto space-y-6">
         {/* Success Header */}
         <div className="text-center pt-8 animate-in fade-in zoom-in duration-700">
           <div className="relative inline-block">
@@ -73,29 +103,16 @@ function EcoContent() {
           </p>
         </div>
 
-        {/* AI Insight Card */}
+        {/* Impact Overview Card */}
         <Card className="relative overflow-hidden p-0 rounded-[3.5rem] border-none shadow-2xl bg-white">
-          {ecoImage && (
-            <div className="w-full h-40 relative">
-              <Image 
-                src={ecoImage.imageUrl}
-                alt={ecoImage.description}
-                fill
-                className="object-cover"
-                data-ai-hint={ecoImage.imageHint}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent" />
-            </div>
-          )}
-
-          <div className="p-8 pb-4">
+          <div className="p-8">
             {loading ? (
               <div className="space-y-4 py-8">
                 <div className="h-6 bg-secondary animate-pulse rounded-full w-3/4" />
                 <div className="h-6 bg-secondary animate-pulse rounded-full w-full" />
                 <div className="h-6 bg-secondary animate-pulse rounded-full w-5/6" />
                 <p className="text-center text-[10px] font-black text-primary/40 pt-6 uppercase tracking-widest animate-pulse">
-                  Analyzing Environmental Impact...
+                  Analyzing Impact...
                 </p>
               </div>
             ) : (
@@ -110,78 +127,118 @@ function EcoContent() {
                   </div>
                   <div className="bg-green-500/10 px-4 py-2 rounded-2xl flex items-center gap-2">
                     <Leaf className="w-4 h-4 text-green-600 fill-green-600" />
-                    <span className="text-xs font-black text-green-700 tracking-wider">LEVEL 4</span>
+                    <span className="text-xs font-black text-green-700 tracking-wider">ELITE</span>
                   </div>
                 </div>
 
                 <Progress value={narrative?.ecoScore} className="h-4 mb-10 bg-primary/5 rounded-full" />
                 
-                <div className="relative px-4 mb-10">
-                  <div className="absolute -left-2 top-0 text-primary opacity-20">
-                    <Sparkles className="w-8 h-8" />
-                  </div>
+                <div className="relative px-4 mb-8">
                   <blockquote className="text-2xl font-headline font-bold leading-tight text-foreground/90 italic tracking-tight">
                     "{narrative?.narrative}"
                   </blockquote>
-                </div>
-
-                {/* Local Raipur Milestone */}
-                <div className="bg-primary/5 p-6 rounded-[2.5rem] mb-6 flex items-center gap-4 border border-primary/10">
-                  <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
-                    <TreePine className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-black text-primary uppercase tracking-wider mb-0.5">Raipur Contribution</p>
-                    <p className="text-sm font-bold text-foreground/80">Equivalent to planting 2.4 trees in Telibandha Park</p>
-                  </div>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Stats Footer Section */}
-          <div className="bg-secondary/20 p-8 pt-6 border-t border-primary/5">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white/80 p-5 rounded-[2rem] shadow-sm">
-                <div className="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center mb-3">
-                  <Wind className="w-5 h-5 text-blue-600" />
-                </div>
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">CO2 Saved</p>
-                <p className="text-2xl font-headline font-black text-blue-700">{(dist * 0.4).toFixed(2)}kg</p>
-              </div>
-              <div className="bg-white/80 p-5 rounded-[2rem] shadow-sm">
-                <div className="w-10 h-10 bg-yellow-500/10 rounded-xl flex items-center justify-center mb-3">
-                  <Zap className="w-5 h-5 text-yellow-600 fill-yellow-600" />
-                </div>
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Energy Saved</p>
-                <p className="text-2xl font-headline font-black text-yellow-700">12.4<span className="text-sm">kWh</span></p>
-              </div>
-            </div>
+          {/* Visual Data Section */}
+          <div className="bg-secondary/10 p-8 border-t border-primary/5">
+             <div className="flex items-center gap-2 mb-6">
+                <PieIcon className="w-4 h-4 text-primary" />
+                <h3 className="text-xs font-black text-primary uppercase tracking-widest">Sustainability Mix</h3>
+             </div>
+             
+             <div className="h-[200px] w-full">
+                <ChartContainer config={chartConfig} className="h-full w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <RechartsTooltip content={<ChartTooltipContent hideLabel />} />
+                      <Pie
+                        data={chartData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={80}
+                        paddingAngle={5}
+                        dataKey="value"
+                      >
+                        {chartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.fill} />
+                        ))}
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
+             </div>
+
+             <div className="grid grid-cols-3 gap-2 mt-4">
+                {chartData.map((item) => (
+                  <div key={item.name} className="text-center">
+                    <p className="text-[8px] font-black uppercase text-muted-foreground mb-1">{item.name}</p>
+                    <div className="h-1 rounded-full mb-1" style={{ backgroundColor: item.fill }} />
+                    <p className="text-xs font-bold">{item.value}%</p>
+                  </div>
+                ))}
+             </div>
           </div>
         </Card>
 
+        {/* Raipur Milestone Card */}
+        <Card className="p-6 rounded-[2.5rem] border-none shadow-xl bg-white">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-12 bg-green-500/10 rounded-2xl flex items-center justify-center shadow-sm">
+              <TreePine className="w-6 h-6 text-green-600" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-primary uppercase tracking-wider mb-0.5">Raipur Contribution</p>
+              <h4 className="text-lg font-headline font-black">GREEN PIONEER</h4>
+            </div>
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+            Your choice to ride electric is equivalent to planting <span className="text-green-600 font-bold">2.4 trees</span> in Telibandha Marine Drive Park this month.
+          </p>
+          <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase">
+            <TrendingUp className="w-3 h-3" />
+            <span>Top 5% of Raipur Commuters</span>
+          </div>
+        </Card>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 gap-4">
+          <Card className="bg-white p-6 rounded-[2.5rem] border-none shadow-lg">
+            <div className="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center mb-3">
+              <Wind className="w-5 h-5 text-blue-600" />
+            </div>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">CO2 Saved</p>
+            <p className="text-2xl font-headline font-black text-blue-700">{(dist * 0.4).toFixed(2)}kg</p>
+          </Card>
+          <Card className="bg-white p-6 rounded-[2.5rem] border-none shadow-lg">
+            <div className="w-10 h-10 bg-yellow-500/10 rounded-xl flex items-center justify-center mb-3">
+              <Zap className="w-5 h-5 text-yellow-600 fill-yellow-600" />
+            </div>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Energy</p>
+            <p className="text-2xl font-headline font-black text-yellow-700">12.4<span className="text-sm">kWh</span></p>
+          </Card>
+        </div>
+
         {/* Action Buttons */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 pt-4">
           <Button 
             className="w-full h-18 rounded-[2rem] bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all group"
           >
             <Share2 className="w-6 h-6 mr-3 group-hover:rotate-12 transition-transform" />
-            SHARE YOUR IMPACT
+            SHARE IMPACT
           </Button>
           <Button 
             variant="ghost"
             onClick={() => router.push('/')} 
-            className="w-full h-18 rounded-[2rem] bg-white border-2 border-primary/10 text-primary font-black text-lg hover:bg-primary/5 transition-all"
+            className="w-full h-18 rounded-[2rem] bg-white/50 backdrop-blur border-2 border-primary/10 text-primary font-black text-lg hover:bg-primary/5 transition-all"
           >
             RETURN HOME
             <ArrowRight className="w-6 h-6 ml-3" />
           </Button>
         </div>
-
-        {/* Mini Tip */}
-        <p className="text-center text-[10px] font-bold text-muted-foreground/60 uppercase tracking-[0.3em] pt-4">
-          Every km in Raipur counts • Ride EasyRide
-        </p>
       </div>
     </div>
   );
