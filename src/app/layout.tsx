@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { Navbar } from '@/components/Navbar';
 import { BottomDock } from '@/components/BottomDock';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'EasyRide | Smart Urban Commute',
@@ -25,10 +26,14 @@ export default function RootLayout({
         <Navbar />
         <div className="flex-1 flex flex-col items-center w-full">
           <main className="w-full max-w-lg md:max-w-7xl min-h-[calc(100vh-64px)] relative bg-background md:shadow-none pb-24 lg:border-x lg:border-primary/5">
-            {children}
+            <Suspense fallback={<div className="h-screen w-full flex items-center justify-center">Loading...</div>}>
+              {children}
+            </Suspense>
           </main>
         </div>
-        <BottomDock />
+        <Suspense fallback={null}>
+          <BottomDock />
+        </Suspense>
         <Toaster />
       </body>
     </html>
