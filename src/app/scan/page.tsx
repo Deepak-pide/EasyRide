@@ -3,17 +3,15 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { X, Zap, Bike, BatteryFull, MapPin, Star, ShieldCheck } from 'lucide-react';
+import { X, Zap, BatteryFull, MapPin, Star, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-// Enhanced mock data with color themes
+// Simplified mock data with only two scooters
 const mockScooters = [
   { id: 'ER-BLUE-01', battery: 94, range: 48, condition: 'New', price: '₹5/km', color: 'blue', name: 'Azure Glide' },
   { id: 'ER-RED-02', battery: 88, range: 42, condition: 'Excellent', price: '₹5/km', color: 'red', name: 'Crimson Bolt' },
-  { id: 'ER-BLUE-03', battery: 76, range: 35, condition: 'Excellent', price: '₹5/km', color: 'blue', name: 'Sky Runner' },
-  { id: 'ER-RED-04', battery: 45, range: 20, condition: 'Good', price: '₹4/km', color: 'red', name: 'Ruby Dash' },
 ];
 
 const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boolean }) => {
@@ -23,10 +21,10 @@ const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boole
   return (
     <div className={cn(
       "relative transition-all duration-700 transform",
-      isSelected ? "scale-110 opacity-100 rotate-0" : "scale-75 opacity-40 -rotate-12 blur-[1px]"
+      isSelected ? "scale-110 opacity-100 rotate-0" : "scale-75 opacity-20 -rotate-12 blur-[2px]"
     )}>
       {/* "3D" CSS/SVG Scooter Representation */}
-      <svg width="180" height="180" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-2xl">
+      <svg width="220" height="220" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-2xl">
         {/* Shadow */}
         <ellipse cx="100" cy="170" rx="70" ry="15" fill="black" fillOpacity="0.1" />
         
@@ -45,7 +43,7 @@ const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boole
         <circle cx="155" cy="155" r="8" fill="#444" />
         
         {/* Glow Effect */}
-        <circle cx="100" cy="100" r="60" stroke={baseColor} strokeOpacity="0.1" strokeWidth="2" className="animate-pulse" />
+        <circle cx="100" cy="100" r="60" stroke={baseColor} strokeOpacity="0.1" strokeWidth="2" className={cn(isSelected && "animate-pulse")} />
       </svg>
     </div>
   );
@@ -87,18 +85,27 @@ export default function ScanPage() {
         </div>
       </div>
 
-      {/* Hero Display - Side by Side Choice */}
-      <div className="h-[45vh] flex items-center justify-center gap-4 px-4 pt-16">
+      {/* Hero Display - Two Options Side by Side */}
+      <div className="h-[45vh] flex items-center justify-center gap-8 px-6 pt-16">
         {mockScooters.map((scooter) => (
           <div 
             key={scooter.id}
             onClick={() => setSelectedScooter(scooter)}
             className={cn(
-              "cursor-pointer transition-all duration-500",
-              selectedScooter.id === scooter.id ? "flex-grow-[3]" : "flex-grow-[1]"
+              "cursor-pointer transition-all duration-500 flex flex-col items-center",
+              selectedScooter.id === scooter.id ? "scale-105 z-10" : "scale-90 z-0"
             )}
           >
             <ScooterVisual color={scooter.color} isSelected={selectedScooter.id === scooter.id} />
+            <div className={cn(
+              "mt-4 transition-opacity duration-500",
+              selectedScooter.id === scooter.id ? "opacity-100" : "opacity-0"
+            )}>
+              <div className={cn(
+                "w-2 h-2 rounded-full mx-auto",
+                scooter.color === 'blue' ? "bg-blue-500 shadow-[0_0_10px_#3B82F6]" : "bg-red-500 shadow-[0_0_10px_#EF4444]"
+              )} />
+            </div>
           </div>
         ))}
       </div>
