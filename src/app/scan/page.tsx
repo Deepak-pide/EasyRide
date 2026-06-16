@@ -22,25 +22,26 @@ const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boole
 
   return (
     <div className={cn(
-      "relative transition-all duration-700 transform w-64 h-64",
-      isSelected ? "scale-110 opacity-100 rotate-0" : "scale-75 opacity-30 -rotate-12 blur-[2px]"
+      "relative transition-all duration-700 ease-out transform w-72 h-72",
+      isSelected ? "scale-100 opacity-100" : "scale-75 opacity-40 blur-[1px]"
     )}>
       {imageData && (
-        <div className="relative w-full h-full drop-shadow-2xl">
+        <div className="relative w-full h-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.3)]">
           <Image 
             src={imageData.imageUrl}
             alt={imageData.description}
             fill
             className={cn(
-              "object-contain transition-all duration-700",
+              "object-contain transition-all duration-1000",
               color === 'blue' ? "hue-rotate-[190deg] saturate-[1.5]" : "hue-rotate-[340deg] saturate-[1.8]"
             )}
             data-ai-hint={imageData.imageHint}
           />
-          {/* Subtle underglow */}
+          {/* Enhanced underglow for center focus */}
           <div className={cn(
-            "absolute bottom-4 left-1/2 -translate-x-1/2 w-3/4 h-4 blur-xl rounded-full opacity-30",
-            color === 'blue' ? "bg-blue-500" : "bg-red-500"
+            "absolute bottom-4 left-1/2 -translate-x-1/2 w-3/4 h-6 blur-2xl rounded-full transition-opacity duration-700",
+            isSelected ? "opacity-40" : "opacity-0",
+            color === 'blue' ? "bg-blue-400" : "bg-red-400"
           )} />
         </div>
       )}
@@ -50,7 +51,8 @@ const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boole
 
 export default function ScanPage() {
   const router = useRouter();
-  const [selectedScooter, setSelectedScooter] = useState(mockScooters[0]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const selectedScooter = mockScooters[selectedIndex];
 
   const handleUnlock = () => {
     router.push(`/ride?id=${selectedScooter.id}`);
@@ -58,9 +60,9 @@ export default function ScanPage() {
 
   return (
     <div className="min-h-screen bg-[#0F172A] flex flex-col relative overflow-hidden">
-      {/* Background Glow */}
+      {/* Dynamic Background Glow */}
       <div className={cn(
-        "absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[60vh] transition-colors duration-1000 blur-[100px] opacity-20",
+        "absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[60vh] transition-colors duration-1000 blur-[120px] opacity-20",
         selectedScooter.color === 'blue' ? "bg-blue-600" : "bg-red-600"
       )} />
 
@@ -84,39 +86,48 @@ export default function ScanPage() {
         </div>
       </div>
 
-      {/* Hero Display */}
-      <div className="h-[55vh] flex items-center justify-center gap-4 px-6 pt-24 pb-12">
-        {mockScooters.map((scooter) => (
-          <div 
-            key={scooter.id}
-            onClick={() => setSelectedScooter(scooter)}
-            className={cn(
-              "cursor-pointer transition-all duration-500 flex flex-col items-center",
-              selectedScooter.id === scooter.id ? "scale-105 z-10" : "scale-90 z-0"
-            )}
-          >
-            <ScooterVisual color={scooter.color} isSelected={selectedScooter.id === scooter.id} />
-            <div className={cn(
-              "mt-4 transition-opacity duration-500",
-              selectedScooter.id === scooter.id ? "opacity-100" : "opacity-0"
-            )}>
+      {/* Sliding Carousel Display */}
+      <div className="h-[55vh] relative flex items-center justify-center pt-24 pb-12 overflow-hidden">
+        <div 
+          className="flex transition-transform duration-700 ease-in-out px-12"
+          style={{ 
+            transform: `translateX(${selectedIndex === 0 ? '15%' : '-15%'})` 
+          }}
+        >
+          {mockScooters.map((scooter, idx) => (
+            <div 
+              key={scooter.id}
+              onClick={() => setSelectedIndex(idx)}
+              className={cn(
+                "cursor-pointer transition-all duration-700 flex flex-col items-center flex-shrink-0 px-4",
+                selectedIndex === idx ? "z-10" : "z-0"
+              )}
+            >
+              <ScooterVisual color={scooter.color} isSelected={selectedIndex === idx} />
+              
+              {/* Active Indicator Dots */}
               <div className={cn(
-                "w-2 h-2 rounded-full mx-auto",
-                scooter.color === 'blue' ? "bg-blue-500 shadow-[0_0_10px_#3B82F6]" : "bg-red-500 shadow-[0_0_10px_#EF4444]"
-              )} />
+                "mt-4 transition-all duration-500",
+                selectedIndex === idx ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+              )}>
+                <div className={cn(
+                  "w-3 h-3 rounded-full mx-auto",
+                  scooter.color === 'blue' ? "bg-blue-500 shadow-[0_0_15px_#3B82F6]" : "bg-red-500 shadow-[0_0_15px_#EF4444]"
+                )} />
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Details Container */}
-      <div className="flex-1 bg-background rounded-t-[4rem] relative z-20 shadow-[0_-20px_60px_rgba(0,0,0,0.3)] p-8 flex flex-col animate-in slide-in-from-bottom-20 duration-1000">
+      <div className="flex-1 bg-background rounded-t-[4rem] relative z-20 shadow-[0_-20px_80px_rgba(0,0,0,0.4)] p-8 flex flex-col animate-in slide-in-from-bottom-20 duration-1000">
         
         {/* Model Info Header */}
         <div className="flex justify-between items-end mb-8">
           <div className="space-y-1">
             <span className={cn(
-              "text-[10px] font-black uppercase tracking-[0.3em] px-3 py-1 rounded-full",
+              "text-[10px] font-black uppercase tracking-[0.3em] px-3 py-1 rounded-full transition-colors duration-500",
               selectedScooter.color === 'blue' ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"
             )}>
               {selectedScooter.name}
@@ -137,11 +148,11 @@ export default function ScanPage() {
 
         {/* Dynamic Stats Grid */}
         <div className="grid grid-cols-2 gap-4 mb-8">
-          <Card className="p-6 rounded-[2.5rem] border-none bg-secondary/20 shadow-sm group hover:bg-secondary/30 transition-colors">
-            <div className="flex items-center gap-3 mb-3">
+          <Card className="p-6 rounded-[2.5rem] border-none bg-secondary/20 shadow-sm transition-all hover:bg-secondary/30">
+            <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center shadow-sm">
                 <BatteryFull className={cn(
-                  "w-6 h-6",
+                  "w-6 h-6 transition-colors duration-500",
                   selectedScooter.battery > 50 ? "text-green-500" : "text-yellow-500"
                 )} />
               </div>
@@ -152,8 +163,8 @@ export default function ScanPage() {
             </div>
           </Card>
 
-          <Card className="p-6 rounded-[2.5rem] border-none bg-secondary/20 shadow-sm group hover:bg-secondary/30 transition-colors">
-            <div className="flex items-center gap-3 mb-3">
+          <Card className="p-6 rounded-[2.5rem] border-none bg-secondary/20 shadow-sm transition-all hover:bg-secondary/30">
+            <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center shadow-sm">
                 <MapPin className="w-6 h-6 text-primary" />
               </div>
@@ -166,7 +177,7 @@ export default function ScanPage() {
         </div>
 
         {/* Pricing Info */}
-        <div className="flex gap-8 px-4 mb-8">
+        <div className="flex justify-between px-4 mb-8">
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Unlock</span>
             <span className="font-bold">₹10.00</span>
@@ -192,7 +203,7 @@ export default function ScanPage() {
           )}
         >
           <Zap className="w-6 h-6 mr-3 fill-accent stroke-accent group-hover:animate-bounce" />
-          UNLOCK THIS {selectedScooter.color.toUpperCase()} RIDE
+          START {selectedScooter.color.toUpperCase()} RIDE
         </Button>
 
         <p className="text-center text-[10px] font-bold text-muted-foreground/40 uppercase tracking-[0.3em] pt-6 pb-2">
