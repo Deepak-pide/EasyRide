@@ -1,4 +1,3 @@
-
 "use client"
 
 import React, { useState, useRef } from 'react';
@@ -9,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { playUnlockSound } from '@/lib/sound-utils';
 
 const mockScooters = [
   { id: 'ER-BLUE-01', battery: 94, range: 48, condition: 'New', price: '₹5/km', color: 'blue', name: 'Azure Glide' },
@@ -55,6 +55,7 @@ export default function ScanPage() {
   const selectedScooter = mockScooters[selectedIndex];
 
   const handleUnlock = () => {
+    playUnlockSound();
     router.push(`/ride?id=${selectedScooter.id}`);
   };
 
