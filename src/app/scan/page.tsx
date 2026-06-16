@@ -3,17 +3,53 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { X, Zap, Camera, Bike, BatteryFull, MapPin, Star } from 'lucide-react';
+import { X, Zap, Bike, BatteryFull, MapPin, Star, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
+// Enhanced mock data with color themes
 const mockScooters = [
-  { id: 'ER-9041', battery: 88, range: 42, condition: 'Excellent', price: '₹5/km' },
-  { id: 'ER-7720', battery: 94, range: 48, condition: 'New', price: '₹5/km' },
-  { id: 'ER-3112', battery: 45, range: 20, condition: 'Good', price: '₹4/km' },
-  { id: 'ER-5509', battery: 76, range: 35, condition: 'Excellent', price: '₹5/km' },
+  { id: 'ER-BLUE-01', battery: 94, range: 48, condition: 'New', price: '₹5/km', color: 'blue', name: 'Azure Glide' },
+  { id: 'ER-RED-02', battery: 88, range: 42, condition: 'Excellent', price: '₹5/km', color: 'red', name: 'Crimson Bolt' },
+  { id: 'ER-BLUE-03', battery: 76, range: 35, condition: 'Excellent', price: '₹5/km', color: 'blue', name: 'Sky Runner' },
+  { id: 'ER-RED-04', battery: 45, range: 20, condition: 'Good', price: '₹4/km', color: 'red', name: 'Ruby Dash' },
 ];
+
+const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boolean }) => {
+  const baseColor = color === 'blue' ? '#3B82F6' : '#EF4444';
+  const shadowColor = color === 'blue' ? '#1D4ED8' : '#B91C1C';
+  
+  return (
+    <div className={cn(
+      "relative transition-all duration-700 transform",
+      isSelected ? "scale-110 opacity-100 rotate-0" : "scale-75 opacity-40 -rotate-12 blur-[1px]"
+    )}>
+      {/* "3D" CSS/SVG Scooter Representation */}
+      <svg width="180" height="180" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-2xl">
+        {/* Shadow */}
+        <ellipse cx="100" cy="170" rx="70" ry="15" fill="black" fillOpacity="0.1" />
+        
+        {/* Main Body */}
+        <path d="M40 140L60 150H140L160 140V120L140 110H60L40 120V140Z" fill={baseColor} />
+        <path d="M40 120L60 110H140L160 120L100 130L40 120Z" fill={shadowColor} />
+        
+        {/* Handle Column */}
+        <rect x="140" y="50" width="12" height="100" rx="6" transform="rotate(-15 140 50)" fill={baseColor} />
+        <rect x="135" y="45" width="40" height="8" rx="4" transform="rotate(-5 135 45)" fill="#333" />
+        
+        {/* Wheels */}
+        <circle cx="60" cy="150" r="20" fill="#1A1A1A" stroke="#333" strokeWidth="4" />
+        <circle cx="155" cy="155" r="20" fill="#1A1A1A" stroke="#333" strokeWidth="4" />
+        <circle cx="60" cy="150" r="8" fill="#444" />
+        <circle cx="155" cy="155" r="8" fill="#444" />
+        
+        {/* Glow Effect */}
+        <circle cx="100" cy="100" r="60" stroke={baseColor} strokeOpacity="0.1" strokeWidth="2" className="animate-pulse" />
+      </svg>
+    </div>
+  );
+};
 
 export default function ScanPage() {
   const router = useRouter();
@@ -24,126 +60,138 @@ export default function ScanPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col relative overflow-hidden">
-      {/* Header Area with Selection View */}
-      <div className="h-[30vh] flex items-center justify-center bg-slate-900 transition-all duration-500">
-        <div className="relative border-2 border-white/20 rounded-3xl w-48 h-48 flex items-center justify-center">
-          <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-accent rounded-tl-2xl" />
-          <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-accent rounded-tr-2xl" />
-          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-accent rounded-bl-2xl" />
-          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-accent rounded-br-2xl" />
-          
-          <div className="flex flex-col items-center gap-2 animate-in zoom-in duration-500">
-            <Bike className="w-12 h-12 text-accent" />
-            <span className="text-white/40 text-[10px] font-black tracking-widest uppercase">Target Locked</span>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#0F172A] flex flex-col relative overflow-hidden">
+      {/* Background Glow */}
+      <div className={cn(
+        "absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-[50vh] transition-colors duration-1000 blur-[100px] opacity-20",
+        selectedScooter.color === 'blue' ? "bg-blue-600" : "bg-red-600"
+      )} />
 
-      {/* Header Overlay */}
-      <div className="absolute top-0 left-0 right-0 z-10 px-6 pt-12 flex justify-between items-center text-white pointer-events-none">
+      {/* Header */}
+      <div className="absolute top-0 left-0 right-0 z-50 px-6 pt-12 flex justify-between items-center text-white">
         <Button 
           variant="ghost" 
           size="icon" 
           onClick={() => router.back()} 
-          className="rounded-full bg-white/10 backdrop-blur pointer-events-auto"
+          className="rounded-full bg-white/10 backdrop-blur-lg hover:bg-white/20 transition-all"
         >
           <X className="w-6 h-6" />
         </Button>
-        <h1 className="font-headline text-lg">Select Your Ride</h1>
-        <div className="w-10" />
+        <div className="text-center">
+          <h1 className="font-headline text-lg font-black tracking-widest uppercase">Select Ride</h1>
+          <p className="text-[10px] text-white/40 font-bold tracking-tighter uppercase">Raipur Fleet v3.2</p>
+        </div>
+        <div className="bg-white/10 backdrop-blur-lg px-3 py-1.5 rounded-full flex items-center gap-2 border border-white/5">
+          <ShieldCheck className="w-4 h-4 text-green-400" />
+          <span className="text-[10px] font-black">SECURE</span>
+        </div>
       </div>
 
-      {/* Content Area */}
-      <div className="flex-1 bg-background rounded-t-[3rem] -mt-10 relative z-20 p-6 flex flex-col animate-in slide-in-from-bottom-10 duration-700">
-        {/* Horizontal Scooter Selection */}
-        <div className="mb-6">
-          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-4 px-2">Nearby in Raipur</p>
-          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
-            {mockScooters.map((scooter) => (
-              <div 
-                key={scooter.id}
-                onClick={() => setSelectedScooter(scooter)}
-                className={cn(
-                  "flex-shrink-0 w-24 h-24 rounded-3xl flex flex-col items-center justify-center transition-all cursor-pointer border-2",
-                  selectedScooter.id === scooter.id 
-                    ? "bg-primary border-primary text-white shadow-xl scale-110" 
-                    : "bg-secondary/30 border-transparent text-muted-foreground"
-                )}
-              >
-                <Bike className={cn("w-8 h-8 mb-1", selectedScooter.id === scooter.id ? "text-accent" : "")} />
-                <span className="text-[10px] font-bold">{scooter.id.split('-')[1]}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Selection Details */}
-        <Card className="flex-1 p-6 rounded-[2.5rem] border-none bg-secondary/20 shadow-inner space-y-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <h2 className="text-2xl font-headline mb-1 tracking-tight">{selectedScooter.id}</h2>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <Star className="w-4 h-4 text-accent fill-accent" />
-                <span className="text-sm font-bold uppercase tracking-wider">{selectedScooter.condition} Condition</span>
-              </div>
-            </div>
-            <div className="bg-primary/10 px-4 py-2 rounded-2xl border border-primary/5">
-              <span className="text-primary font-black">{selectedScooter.price}</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white p-5 rounded-[2rem] shadow-sm">
-              <div className="flex items-center gap-2 mb-2">
-                <BatteryFull className="w-4 h-4 text-green-500" />
-                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Battery</span>
-              </div>
-              <p className="text-2xl font-headline font-black">{selectedScooter.battery}%</p>
-            </div>
-            <div className="bg-white p-5 rounded-[2rem] shadow-sm">
-              <div className="flex items-center gap-2 mb-2">
-                <MapPin className="w-4 h-4 text-primary" />
-                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Range</span>
-              </div>
-              <p className="text-2xl font-headline font-black">{selectedScooter.range}<span className="text-sm ml-1 text-muted-foreground">KM</span></p>
-            </div>
-          </div>
-
-          <div className="space-y-4 pt-2">
-            <div className="flex items-center justify-between text-xs px-2">
-              <span className="text-muted-foreground font-medium uppercase tracking-wider">Unlock Fee</span>
-              <span className="font-black text-foreground">₹10.00</span>
-            </div>
-            <div className="flex items-center justify-between text-xs px-2">
-              <span className="text-muted-foreground font-medium uppercase tracking-wider">Distance Rate</span>
-              <span className="font-black text-foreground">₹5.00 / KM</span>
-            </div>
-          </div>
-
-          <Button 
-            onClick={handleUnlock} 
-            className="w-full h-18 rounded-[2rem] bg-primary hover:bg-primary/90 text-white font-black text-lg shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02]"
+      {/* Hero Display - Side by Side Choice */}
+      <div className="h-[45vh] flex items-center justify-center gap-4 px-4 pt-16">
+        {mockScooters.map((scooter) => (
+          <div 
+            key={scooter.id}
+            onClick={() => setSelectedScooter(scooter)}
+            className={cn(
+              "cursor-pointer transition-all duration-500",
+              selectedScooter.id === scooter.id ? "flex-grow-[3]" : "flex-grow-[1]"
+            )}
           >
-            <Zap className="w-6 h-6 mr-3 fill-accent stroke-accent" />
-            UNLOCK & START RIDE
-          </Button>
-        </Card>
-
-        <div className="mt-8 flex justify-center gap-12 text-muted-foreground/30">
-          <div className="flex flex-col items-center gap-2">
-            <div className="p-4 bg-secondary/30 rounded-full">
-              <Camera className="w-6 h-6" />
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-widest">Manual Entry</span>
+            <ScooterVisual color={scooter.color} isSelected={selectedScooter.id === scooter.id} />
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <div className="p-4 bg-secondary/30 rounded-full">
-              <Zap className="w-6 h-6" />
+        ))}
+      </div>
+
+      {/* Details Container */}
+      <div className="flex-1 bg-background rounded-t-[4rem] relative z-20 shadow-[0_-20px_60px_rgba(0,0,0,0.3)] p-8 flex flex-col animate-in slide-in-from-bottom-20 duration-1000">
+        
+        {/* Model Info Header */}
+        <div className="flex justify-between items-end mb-8">
+          <div className="space-y-1">
+            <span className={cn(
+              "text-[10px] font-black uppercase tracking-[0.3em] px-3 py-1 rounded-full",
+              selectedScooter.color === 'blue' ? "bg-blue-100 text-blue-700" : "bg-red-100 text-red-700"
+            )}>
+              {selectedScooter.name}
+            </span>
+            <h2 className="text-4xl font-headline font-black tracking-tighter text-foreground pt-2">
+              {selectedScooter.id}
+            </h2>
+            <div className="flex items-center gap-2">
+              <Star className="w-4 h-4 text-accent fill-accent" />
+              <span className="text-xs font-bold text-muted-foreground uppercase">{selectedScooter.condition} Grade</span>
             </div>
-            <span className="text-[10px] font-black uppercase tracking-widest">Help</span>
+          </div>
+          <div className="text-right">
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Price</p>
+            <p className="text-3xl font-headline font-black text-primary leading-none">{selectedScooter.price}</p>
           </div>
         </div>
+
+        {/* Dynamic Stats Grid */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <Card className="p-6 rounded-[2.5rem] border-none bg-secondary/20 shadow-sm group hover:bg-secondary/30 transition-colors">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+                <BatteryFull className={cn(
+                  "w-6 h-6",
+                  selectedScooter.battery > 50 ? "text-green-500" : "text-yellow-500"
+                )} />
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Charge</p>
+                <p className="text-2xl font-headline font-black">{selectedScooter.battery}%</p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6 rounded-[2.5rem] border-none bg-secondary/20 shadow-sm group hover:bg-secondary/30 transition-colors">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+                <MapPin className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Est. Range</p>
+                <p className="text-2xl font-headline font-black">{selectedScooter.range}<span className="text-xs ml-1 opacity-40">KM</span></p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Pricing Info */}
+        <div className="flex gap-8 px-4 mb-8">
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Unlock</span>
+            <span className="font-bold">₹10.00</span>
+          </div>
+          <div className="w-px h-8 bg-border" />
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Distance</span>
+            <span className="font-bold">₹5.00/km</span>
+          </div>
+          <div className="w-px h-8 bg-border" />
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Insurance</span>
+            <span className="font-bold text-green-600">Free</span>
+          </div>
+        </div>
+
+        {/* Action Button */}
+        <Button 
+          onClick={handleUnlock} 
+          className={cn(
+            "w-full h-20 rounded-[2.5rem] text-white font-black text-xl shadow-2xl transition-all hover:scale-[1.02] active:scale-95 group",
+            selectedScooter.color === 'blue' ? "bg-blue-600 hover:bg-blue-700 shadow-blue-500/30" : "bg-red-600 hover:bg-red-700 shadow-red-500/30"
+          )}
+        >
+          <Zap className="w-6 h-6 mr-3 fill-accent stroke-accent group-hover:animate-bounce" />
+          UNLOCK THIS {selectedScooter.color.toUpperCase()} RIDE
+        </Button>
+
+        <p className="text-center text-[10px] font-bold text-muted-foreground/40 uppercase tracking-[0.3em] pt-6 pb-2">
+          Secure Bluetooth Pairing • Raipur Smart Mobility
+        </p>
       </div>
     </div>
   );
