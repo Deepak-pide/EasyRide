@@ -3,7 +3,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader, OverlayView } from '@react-google-maps/api';
-import { Navigation, MapPin, UserCircle, Zap, Info, Landmark } from 'lucide-react';
+import { Navigation, MapPin, UserCircle, Zap, Info, Landmark, Sparkles } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
@@ -63,11 +63,13 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [nearestId, setNearestId] = useState<number | null>(null);
 
   useEffect(() => {
-    // Default nearest for simulation
-    if (onNearestStationFound && isSimulation) {
-      onNearestStationFound(mockStations[0], 0.8); 
+    if (isSimulation) {
+      const nearest = mockStations[0];
+      setNearestId(nearest.id);
+      if (onNearestStationFound) onNearestStationFound(nearest, 0.8);
     }
 
     if (navigator.geolocation) {
@@ -85,6 +87,7 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
               nearest = station;
             }
           });
+          setNearestId(nearest.id);
           if (onNearestStationFound) onNearestStationFound(nearest, minDistance);
         }
       );
@@ -115,29 +118,51 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
         </div>
 
         {/* Mock Markers */}
-        {mockStations.map((station, idx) => (
-          <div 
-            key={station.id}
-            className="absolute transition-all hover:scale-110 cursor-pointer"
-            style={{ 
-              top: `${25 + (idx % 3) * 20}%`, 
-              left: `${15 + (idx % 4) * 20}%` 
-            }}
-          >
-            <div className="relative flex flex-col items-center">
-                <Card className="bg-white/95 backdrop-blur-sm p-2 rounded-2xl shadow-xl border-2 border-primary/20 flex items-center gap-2 group hover:border-primary transition-colors">
-                    <div className="bg-primary p-2 rounded-xl text-white group-hover:rotate-12 transition-transform">
-                        <Navigation className="w-4 h-4 fill-white" />
-                    </div>
-                    <div className="flex flex-col pr-1">
-                        <span className="text-[10px] font-black text-primary uppercase leading-tight">{station.available} Available</span>
-                        <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight truncate max-w-[80px]">{station.label}</span>
-                    </div>
-                </Card>
-                <div className="w-3 h-3 bg-primary rounded-full mt-[-4px] shadow-lg border-2 border-white animate-pulse" />
+        {mockStations.map((station, idx) => {
+          const isNearest = station.id === nearestId;
+          return (
+            <div 
+              key={station.id}
+              className={cn(
+                "absolute transition-all cursor-pointer z-10",
+                isNearest ? "scale-110 z-20" : "hover:scale-105"
+              )}
+              style={{ 
+                top: `${25 + (idx % 3) * 20}%`, 
+                left: `${15 + (idx % 4) * 20}%` 
+              }}
+            >
+              <div className="relative flex flex-col items-center">
+                  <Card className={cn(
+                    "bg-white/95 backdrop-blur-sm p-2 rounded-2xl shadow-xl border-2 transition-all group",
+                    isNearest ? "border-primary ring-4 ring-primary/20 scale-110" : "border-primary/20 hover:border-primary"
+                  )}>
+                      <div className={cn(
+                        "p-2 rounded-xl text-white transition-transform",
+                        isNearest ? "bg-primary" : "bg-primary/60 group-hover:rotate-12 group-hover:bg-primary"
+                      )}>
+                          {isNearest ? <Sparkles className="w-4 h-4 fill-white" /> : <Navigation className="w-4 h-4 fill-white" />}
+                      </div>
+                      <div className="flex flex-col pr-1">
+                          <span className={cn(
+                            "text-[10px] font-black uppercase leading-tight",
+                            isNearest ? "text-primary" : "text-primary/60"
+                          )}>
+                            {isNearest ? 'NEAREST' : `${station.available} Available`}
+                          </span>
+                          <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight truncate max-w-[80px]">
+                            {station.label}
+                          </span>
+                      </div>
+                  </Card>
+                  <div className={cn(
+                    "w-3 h-3 rounded-full mt-[-4px] shadow-lg border-2 border-white animate-pulse",
+                    isNearest ? "bg-primary h-4 w-4" : "bg-primary"
+                  )} />
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {/* User Marker */}
         <div className="absolute top-[60%] left-[45%] transform -translate-x-1/2 -translate-y-1/2 z-20">
@@ -175,28 +200,42 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
         onLoad={setMap}
         options={mapOptions}
       >
-        {mockStations.map((station) => (
-          <OverlayView
-            key={station.id}
-            position={{ lat: station.lat, lng: station.lng }}
-            mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-          >
-            <div className="transform -translate-x-1/2 -translate-y-1/2 cursor-pointer">
-              <div className="relative flex items-center justify-center">
-                <div className="absolute w-12 h-12 bg-primary/20 rounded-full animate-ping opacity-75" />
-                <Card className="relative bg-white p-2 rounded-2xl shadow-xl border-2 border-primary flex items-center gap-2">
-                  <div className="bg-primary p-1.5 rounded-lg text-white">
-                    <Navigation className="w-4 h-4 fill-white" />
-                  </div>
-                  <div className="flex flex-col pr-1">
-                    <span className="font-black text-[10px] text-primary leading-tight">{station.available} Available</span>
-                    <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight">{station.label}</span>
-                  </div>
-                </Card>
+        {mockStations.map((station) => {
+          const isNearest = station.id === nearestId;
+          return (
+            <OverlayView
+              key={station.id}
+              position={{ lat: station.lat, lng: station.lng }}
+              mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+            >
+              <div className={cn(
+                "transform -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all",
+                isNearest ? "z-50 scale-110" : "z-10"
+              )}>
+                <div className="relative flex items-center justify-center">
+                  <div className={cn(
+                    "absolute bg-primary/20 rounded-full animate-ping opacity-75",
+                    isNearest ? "w-16 h-16" : "w-12 h-12"
+                  )} />
+                  <Card className={cn(
+                    "relative p-2 rounded-2xl shadow-xl border-2 flex items-center gap-2",
+                    isNearest ? "border-primary bg-white ring-4 ring-primary/10" : "border-primary bg-white/90"
+                  )}>
+                    <div className="bg-primary p-1.5 rounded-lg text-white">
+                      {isNearest ? <Sparkles className="w-4 h-4 fill-white" /> : <Navigation className="w-4 h-4 fill-white" />}
+                    </div>
+                    <div className="flex flex-col pr-1">
+                      <span className="font-black text-[10px] text-primary leading-tight">
+                        {isNearest ? 'NEAREST' : `${station.available} Available`}
+                      </span>
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-tight">{station.label}</span>
+                    </div>
+                  </Card>
+                </div>
               </div>
-            </div>
-          </OverlayView>
-        ))}
+            </OverlayView>
+          );
+        })}
 
         {userLocation && (
           <OverlayView position={userLocation} mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>

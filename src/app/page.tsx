@@ -89,6 +89,26 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            
+            {nearestStation && (
+              <div className="mt-6 pt-6 border-t border-primary/5 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+                      <Navigation className="w-5 h-5 text-white fill-white" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black text-primary uppercase tracking-widest">Nearest Fleet Hub</p>
+                      <p className="text-sm font-bold text-foreground">{nearestStation.label}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-headline font-black text-primary leading-none">{nearestStation.distance} <span className="text-[10px] uppercase">km</span></p>
+                    <p className="text-[8px] font-bold text-muted-foreground uppercase mt-1">Walk: 12m</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </Card>
 
           {/* Localized Raipur Hero */}
