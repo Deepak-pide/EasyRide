@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { playUnlockSound } from '@/lib/sound-utils';
+import { playUnlockSound, playTapSound } from '@/lib/sound-utils';
 
 const mockScooters = [
   { id: 'ER-BLUE-01', battery: 94, range: 48, condition: 'New', price: '₹5/km', color: 'blue', name: 'Azure Glide' },
@@ -60,11 +60,17 @@ export default function ScanPage() {
   };
 
   const handlePrev = () => {
-    if (selectedIndex > 0) setSelectedIndex(selectedIndex - 1);
+    if (selectedIndex > 0) {
+      playTapSound();
+      setSelectedIndex(selectedIndex - 1);
+    }
   };
 
   const handleNext = () => {
-    if (selectedIndex < mockScooters.length - 1) setSelectedIndex(selectedIndex + 1);
+    if (selectedIndex < mockScooters.length - 1) {
+      playTapSound();
+      setSelectedIndex(selectedIndex + 1);
+    }
   };
 
   const onTouchStart = (e: React.TouchEvent) => {
@@ -91,7 +97,10 @@ export default function ScanPage() {
         <Button 
           variant="ghost" 
           size="icon" 
-          onClick={() => router.back()} 
+          onClick={() => {
+            playTapSound();
+            router.back();
+          }} 
           className="rounded-full bg-white/10 backdrop-blur-xl hover:bg-white/20 transition-all border border-white/10"
         >
           <X className="w-6 h-6" />
@@ -143,9 +152,14 @@ export default function ScanPage() {
           {mockScooters.map((scooter, idx) => (
             <div 
               key={scooter.id}
-              onClick={() => setSelectedIndex(idx)}
+              onClick={() => {
+                if (selectedIndex !== idx) {
+                  playTapSound();
+                  setSelectedIndex(idx);
+                }
+              }}
               className={cn(
-                "flex-1 flex flex-col items-center justify-center transition-all duration-700",
+                "flex-1 flex flex-col items-center justify-center transition-all duration-700 cursor-pointer",
                 selectedIndex === idx ? "z-20" : "z-10 opacity-40 grayscale-[0.5]"
               )}
             >
