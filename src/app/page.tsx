@@ -1,6 +1,7 @@
+
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useCallback, Suspense } from 'react';
 import Image from 'next/image';
 import { LiveMap } from '@/components/LiveMap';
 import { Card } from '@/components/ui/card';
@@ -12,12 +13,17 @@ export default function Home() {
   const [nearestStation, setNearestStation] = useState<{label: string, distance: number} | null>(null);
   const heroImage = PlaceHolderImages.find(img => img.id === 'raipur-skyline');
 
-  const handleNearestStationFound = (station: any, distance: number) => {
-    setNearestStation({
-      label: station.label,
-      distance: +distance.toFixed(1)
+  // Memoize this to prevent the LiveMap from re-rendering in an infinite loop
+  const handleNearestStationFound = useCallback((station: any, distance: number) => {
+    setNearestStation(prev => {
+      // Only update if the data actually changed to prevent re-render loops
+      if (prev?.label === station.label && prev?.distance === +distance.toFixed(1)) return prev;
+      return {
+        label: station.label,
+        distance: +distance.toFixed(1)
+      };
     });
-  };
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen bg-background font-body">
@@ -58,10 +64,16 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Map Container - Ensuring visibility on all screens */}
+          {/* Map Container - Wrapped in Suspense to prevent blocking the main thread */}
           <div className="w-full h-[45vh] md:h-[60vh] min-h-[450px] relative px-4 md:px-0 shrink-0 mb-8">
             <div className="w-full h-full rounded-[3.5rem] overflow-hidden shadow-2xl border-4 border-white relative bg-white">
-              <LiveMap onNearestStationFound={handleNearestStationFound} />
+              <Suspense fallback={
+                <div className="w-full h-full flex items-center justify-center bg-secondary/10 animate-pulse">
+                  <p className="text-[10px] font-black text-primary/40 uppercase tracking-widest">Loading Map...</p>
+                </div>
+              }>
+                <LiveMap onNearestStationFound={handleNearestStationFound} />
+              </Suspense>
             </div>
           </div>
 

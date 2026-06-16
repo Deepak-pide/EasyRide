@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview Utility for playing UI sounds. 
  * Optimized to ensure sound playback does not block the UI thread or navigation.
@@ -12,6 +13,7 @@ const playSound = (path: string) => {
   audio.currentTime = 0;
   
   // We don't await the play() promise to ensure it's completely non-blocking.
+  // This allows the page transition to start immediately.
   audio.play().catch(() => {
     // Silently fail if blocked by browser policy (common for first-time interactions)
   });
