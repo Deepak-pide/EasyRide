@@ -5,11 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Map, Zap, History, Leaf, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-<<<<<<< HEAD
-import { playTapSound } from '@/lib/sound-utils';
-=======
 import { playTapSound } from '@/lib/audio-utils';
->>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
 
 const navItems = [
   { icon: Map, label: 'Explore', href: '/' },
@@ -37,16 +33,8 @@ export function BottomDock() {
               <Link
                 key={item.label}
                 href={item.href}
-<<<<<<< HEAD
-<<<<<<< HEAD
                 onClick={playTapSound}
-                className="relative -top-6 flex flex-col items-center justify-center px-1"
-=======
-=======
-                onClick={playTapSound}
->>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
                 className="relative -top-6 flex flex-col items-center justify-center px-1 group"
->>>>>>> 3f0c062 (still not working page not loading what could be cause trobleshoot and t)
               >
                 <div className="bg-accent text-accent-foreground p-5 rounded-full shadow-[0_8px_30px_rgb(255,235,51,0.4)] transition-all active:scale-90 border-4 border-background group-hover:scale-105">
                   <Icon className="w-7 h-7 stroke-[3px]" />
@@ -62,16 +50,8 @@ export function BottomDock() {
             <Link
               key={item.label}
               href={item.href}
-<<<<<<< HEAD
-<<<<<<< HEAD
               onClick={playTapSound}
-              className="flex flex-col items-center justify-center flex-1 py-2 transition-colors active:scale-95"
-=======
-=======
-              onClick={playTapSound}
->>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
               className="flex flex-col items-center justify-center flex-1 py-2 transition-all active:scale-95 group"
->>>>>>> 3f0c062 (still not working page not loading what could be cause trobleshoot and t)
             >
               <div className={cn(
                 "p-2 rounded-xl transition-all",

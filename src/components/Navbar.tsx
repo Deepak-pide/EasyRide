@@ -5,15 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Map, Zap, History, Leaf, User, Bike } from 'lucide-react';
 import { cn } from '@/lib/utils';
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { Button } from '@/components/ui/button';
-import { playTapSound } from '@/lib/sound-utils';
-=======
->>>>>>> 3f0c062 (still not working page not loading what could be cause trobleshoot and t)
-=======
 import { playTapSound } from '@/lib/audio-utils';
->>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
 
 const navItems = [
   { icon: Map, label: 'Explore', href: '/' },
@@ -28,25 +20,12 @@ export function Navbar() {
   return (
     <header className="hidden md:block sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-8 mx-auto max-w-7xl">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <Link href="/" onClick={playTapSound} className="flex items-center gap-2">
-          <div className="bg-primary p-1.5 rounded-lg">
-=======
-        <Link href="/" className="flex items-center gap-2 group">
-=======
-        <Link href="/" onClick={playTapSound} className="flex items-center gap-2 group">
->>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
-=======
         <Link 
           href="/" 
           onClick={playTapSound} 
           className="flex items-center gap-2 group"
         >
->>>>>>> 314c33f (add tap.mp3 to play when switched nav)
           <div className="bg-primary p-1.5 rounded-lg group-hover:scale-110 transition-transform">
->>>>>>> 3f0c062 (still not working page not loading what could be cause trobleshoot and t)
             <Bike className="w-6 h-6 text-white" />
           </div>
           <span className="text-xl font-headline font-black tracking-tight uppercase">EasyRide</span>
@@ -73,13 +52,6 @@ export function Navbar() {
           })}
         </nav>
 
-<<<<<<< HEAD
-        <Link href="/scan" onClick={playTapSound}>
-          <Button className="bg-accent text-accent-foreground font-black rounded-full px-6 hover:scale-105 transition-transform">
-            <Zap className="w-4 h-4 mr-2 fill-current" />
-            UNLOCK SCOOTER
-          </Button>
-=======
         <Link 
           href="/scan"
           onClick={playTapSound}
@@ -87,7 +59,6 @@ export function Navbar() {
         >
           <Zap className="w-4 h-4 fill-current" />
           UNLOCK SCOOTER
->>>>>>> 3f0c062 (still not working page not loading what could be cause trobleshoot and t)
         </Link>
       </div>
     </header>

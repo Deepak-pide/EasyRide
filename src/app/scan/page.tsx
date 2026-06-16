@@ -8,11 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-<<<<<<< HEAD
-import { playUnlockSound, playTapSound } from '@/lib/sound-utils';
-=======
 import { playTapSound, playUnlockSound } from '@/lib/audio-utils';
->>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
 
 const mockScooters = [
   { id: 'ER-BLUE-01', battery: 94, range: 48, condition: 'New', price: '₹5/km', color: 'blue', name: 'Azure Glide' },
@@ -51,49 +47,29 @@ export default function ScanPage() {
   const router = useRouter();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isUnlocking, setIsUnlocking] = useState(false);
-  const touchStart = useRef<number | null>(null);
   const selectedScooter = mockScooters[selectedIndex];
 
   const handleUnlock = () => {
-<<<<<<< HEAD
-    playUnlockSound();
-    router.push(`/ride?id=${selectedScooter.id}`);
-=======
     setIsUnlocking(true);
     playUnlockSound();
     
     // Animate before redirecting
     setTimeout(() => {
       router.push(`/ride?id=${selectedScooter.id}`);
-<<<<<<< HEAD
-    }, 1800);
->>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
-=======
     }, 2000);
->>>>>>> 314c33f (add tap.mp3 to play when switched nav)
   };
 
   const handlePrev = () => {
     if (selectedIndex > 0) {
-<<<<<<< HEAD
-      playTapSound();
-      setSelectedIndex(selectedIndex - 1);
-=======
       setSelectedIndex(selectedIndex - 1);
       playTapSound();
->>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
     }
   };
 
   const handleNext = () => {
     if (selectedIndex < mockScooters.length - 1) {
-<<<<<<< HEAD
-      playTapSound();
-      setSelectedIndex(selectedIndex + 1);
-=======
       setSelectedIndex(selectedIndex + 1);
       playTapSound();
->>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
     }
   };
 
@@ -127,19 +103,8 @@ export default function ScanPage() {
         <Button 
           variant="ghost" 
           size="icon" 
-<<<<<<< HEAD
-          onClick={() => {
-            playTapSound();
-            router.back();
-          }} 
-=======
           onClick={() => { playTapSound(); router.back(); }} 
-<<<<<<< HEAD
->>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
-          className="rounded-full bg-white/10 backdrop-blur-xl hover:bg-white/20 transition-all border border-white/10"
-=======
           className="rounded-full bg-white/10 backdrop-blur-xl hover:bg-white/20 text-white"
->>>>>>> d7aeabe (again it is not switching to navigation fix triubleshoot if it took more)
         >
           <X className="w-6 h-6" />
         </Button>
@@ -179,20 +144,6 @@ export default function ScanPage() {
           {mockScooters.map((scooter, idx) => (
             <div 
               key={scooter.id}
-<<<<<<< HEAD
-              onClick={() => {
-                if (selectedIndex !== idx) {
-<<<<<<< HEAD
-                  playTapSound();
-                  setSelectedIndex(idx);
-=======
-                  setSelectedIndex(idx);
-                  playTapSound();
->>>>>>> 90d3a60 (okk now use unlock.wav  and tap.mp3 for tapping and swtching between sco)
-                }
-              }}
-=======
->>>>>>> d7aeabe (again it is not switching to navigation fix triubleshoot if it took more)
               className={cn(
                 "transition-all duration-700 absolute",
                 selectedIndex === idx ? "opacity-100 scale-100" : "opacity-0 scale-75 pointer-events-none"
