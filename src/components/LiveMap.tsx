@@ -1,9 +1,9 @@
 
 "use client"
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, OverlayView } from '@react-google-maps/api';
-import { Navigation, MapPin } from 'lucide-react';
+import { Navigation, MapPin, UserCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 const RAIPUR_CENTER = {
@@ -11,7 +11,7 @@ const RAIPUR_CENTER = {
   lng: 81.6508
 };
 
-const mockStations = [
+export const mockStations = [
   { id: 1, lat: 21.1764, lng: 81.6705, label: 'Sejbahar Hub', available: 8 },
   { id: 2, lat: 21.2227, lng: 81.6508, label: 'Santoshi Nagar Chouk', available: 12 },
   { id: 3, lat: 21.2588, lng: 81.6298, label: 'Raipur Station', available: 5 },
@@ -59,7 +59,23 @@ const mapOptions = {
   ]
 };
 
-export function LiveMap() {
+// Helper to calculate distance in KM
+function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const R = 6371; // Radius of earth in KM
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+interface LiveMapProps {
+  onNearestStationFound?: (station: any, distance: number) => void;
+}
+
+export function LiveMap({ onNearestStationFound }: LiveMapProps) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   const { isLoaded, loadError } = useJsApiLoader({
@@ -68,6 +84,40 @@ export function LiveMap() {
   });
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const loc = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          setUserLocation(loc);
+          
+          // Find nearest station
+          let nearest = mockStations[0];
+          let minDistance = Infinity;
+          
+          mockStations.forEach(station => {
+            const dist = getDistance(loc.lat, loc.lng, station.lat, station.lng);
+            if (dist < minDistance) {
+              minDistance = dist;
+              nearest = station;
+            }
+          });
+
+          if (onNearestStationFound) {
+            onNearestStationFound(nearest, minDistance);
+          }
+        },
+        () => {
+          console.log("Geolocation permission denied");
+        }
+      );
+    }
+  }, [onNearestStationFound]);
 
   const onLoad = useCallback(function callback(map: google.maps.Map) {
     setMap(map);
@@ -112,7 +162,7 @@ export function LiveMap() {
     <div className="relative w-full h-full">
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={RAIPUR_CENTER}
+        center={userLocation || RAIPUR_CENTER}
         zoom={13}
         onLoad={onLoad}
         onUnmount={onUnmount}
@@ -141,22 +191,26 @@ export function LiveMap() {
           </OverlayView>
         ))}
 
-        <OverlayView
-          position={RAIPUR_CENTER}
-          mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-        >
-          <div className="transform -translate-x-1/2 -translate-y-1/2">
-            <div className="relative">
-              <div className="w-6 h-6 bg-accent rounded-full border-4 border-white shadow-lg z-10 relative" />
-              <div className="absolute inset-0 bg-accent/30 rounded-full animate-pulse scale-[2.5]" />
+        {userLocation && (
+          <OverlayView
+            position={userLocation}
+            mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+          >
+            <div className="transform -translate-x-1/2 -translate-y-1/2">
+              <div className="relative">
+                <div className="w-8 h-8 bg-blue-500 rounded-full border-4 border-white shadow-2xl z-10 relative flex items-center justify-center">
+                  <UserCircle className="w-5 h-5 text-white" />
+                </div>
+                <div className="absolute inset-0 bg-blue-500/30 rounded-full animate-pulse scale-[2]" />
+              </div>
             </div>
-          </div>
-        </OverlayView>
+          </OverlayView>
+        )}
       </GoogleMap>
 
       <div className="absolute top-6 right-6 flex flex-col gap-3">
         <button 
-          onClick={() => map?.panTo(RAIPUR_CENTER)}
+          onClick={() => map?.panTo(userLocation || RAIPUR_CENTER)}
           className="bg-white/90 backdrop-blur shadow-lg p-3 rounded-2xl border border-white/50 active:scale-90 transition-transform"
         >
           <Navigation className="w-5 h-5 text-primary" />

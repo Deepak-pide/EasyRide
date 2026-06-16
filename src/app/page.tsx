@@ -1,15 +1,24 @@
 
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 import { LiveMap } from '@/components/LiveMap';
 import { BottomDock } from '@/components/BottomDock';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Zap, MapPin, Bike, Search } from 'lucide-react';
+import { Zap, MapPin, Bike, Search, Navigation } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 export default function Home() {
+  const [nearestStation, setNearestStation] = useState<{label: string, distance: number} | null>(null);
+
+  const handleNearestStationFound = (station: any, distance: number) => {
+    setNearestStation({
+      label: station.label,
+      distance: +distance.toFixed(1)
+    });
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background pb-32">
       {/* Search Header */}
@@ -26,7 +35,7 @@ export default function Home() {
       {/* Map Content - Fixed Height for Mobile Viewport */}
       <div className="h-[60vh] relative z-10">
         <div className="absolute inset-0 rounded-b-[3rem] overflow-hidden shadow-2xl">
-          <LiveMap />
+          <LiveMap onNearestStationFound={handleNearestStationFound} />
         </div>
       </div>
 
@@ -36,7 +45,14 @@ export default function Home() {
           <div className="flex justify-between items-start mb-4">
             <div>
               <h1 className="text-2xl font-headline mb-1">EasyRide Raipur</h1>
-              <p className="text-muted-foreground text-sm">Nearby scooters at Sejbahar & Santoshi Nagar.</p>
+              {nearestStation ? (
+                <div className="flex items-center gap-2 text-primary font-bold animate-in fade-in slide-in-from-left-2 duration-500">
+                  <Navigation className="w-4 h-4 fill-primary" />
+                  <p className="text-sm">Nearest: {nearestStation.label} ({nearestStation.distance}km away)</p>
+                </div>
+              ) : (
+                <p className="text-muted-foreground text-sm">Finding scooters near you...</p>
+              )}
             </div>
             <div className="bg-primary/10 px-3 py-1 rounded-full flex items-center gap-1.5">
               <Zap className="w-3.5 h-3.5 text-primary fill-primary" />
@@ -69,8 +85,11 @@ export default function Home() {
         <div className="bg-primary text-white p-6 rounded-[2.5rem] shadow-xl relative overflow-hidden group">
           <div className="relative z-10">
             <h2 className="text-xl font-headline mb-2">Unlock Your Ride</h2>
-            <p className="text-primary-foreground/80 text-sm mb-4">Scan the QR on any scooter near Sejbahar to start.</p>
-            <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-2xl h-12 shadow-lg">
+            <p className="text-primary-foreground/80 text-sm mb-4">Scan the QR on any scooter near you to start.</p>
+            <Button 
+              onClick={() => window.location.href = '/scan'}
+              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold rounded-2xl h-12 shadow-lg"
+            >
               SCAN QR CODE
             </Button>
           </div>
