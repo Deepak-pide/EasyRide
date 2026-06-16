@@ -10,7 +10,6 @@ import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
-// Simplified mock data with only two scooters
 const mockScooters = [
   { id: 'ER-BLUE-01', battery: 94, range: 48, condition: 'New', price: '₹5/km', color: 'blue', name: 'Azure Glide' },
   { id: 'ER-RED-02', battery: 88, range: 42, condition: 'Excellent', price: '₹5/km', color: 'red', name: 'Crimson Bolt' },
@@ -38,7 +37,6 @@ const ScooterVisual = ({ color, isSelected }: { color: string, isSelected: boole
             data-ai-hint={imageData.imageHint}
             priority
           />
-          {/* Internal Glow for depth */}
           <div className={cn(
             "absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-12 blur-3xl rounded-full transition-opacity duration-1000",
             isSelected ? "opacity-40" : "opacity-0",
@@ -68,7 +66,6 @@ export default function ScanPage() {
     if (selectedIndex < mockScooters.length - 1) setSelectedIndex(selectedIndex + 1);
   };
 
-  // Swipe logic
   const onTouchStart = (e: React.TouchEvent) => {
     touchStart.current = e.targetTouches[0].clientX;
   };
@@ -77,24 +74,18 @@ export default function ScanPage() {
     if (!touchStart.current) return;
     const touchEnd = e.changedTouches[0].clientX;
     const diff = touchStart.current - touchEnd;
-
-    if (diff > 50) {
-      handleNext();
-    } else if (diff < -50) {
-      handlePrev();
-    }
+    if (diff > 50) handleNext();
+    else if (diff < -50) handlePrev();
     touchStart.current = null;
   };
 
   return (
     <div className="min-h-screen bg-[#0F172A] flex flex-col relative overflow-hidden selection:bg-none">
-      {/* Dynamic Background Glow */}
       <div className={cn(
         "absolute top-0 left-1/2 -translate-x-1/2 w-[180%] h-[70vh] transition-colors duration-1000 blur-[140px] opacity-25 pointer-events-none",
         selectedScooter.color === 'blue' ? "bg-blue-600" : "bg-red-600"
       )} />
 
-      {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-50 px-6 pt-12 flex justify-between items-center text-white">
         <Button 
           variant="ghost" 
@@ -114,13 +105,11 @@ export default function ScanPage() {
         </div>
       </div>
 
-      {/* Carousel Section */}
       <div 
         className="h-[50vh] relative flex items-center justify-center pt-24 overflow-hidden touch-pan-y"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
-        {/* Floating Arrows */}
         <button 
           onClick={handlePrev}
           disabled={selectedIndex === 0}
@@ -143,7 +132,6 @@ export default function ScanPage() {
           <ChevronRight className="w-8 h-8" />
         </button>
 
-        {/* The Carousel Container */}
         <div 
           className="flex transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] items-center"
           style={{ 
@@ -161,7 +149,6 @@ export default function ScanPage() {
               )}
             >
               <ScooterVisual color={scooter.color} isSelected={selectedIndex === idx} />
-              
               <div className={cn(
                 "mt-6 transition-all duration-500",
                 selectedIndex === idx ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
@@ -176,10 +163,7 @@ export default function ScanPage() {
         </div>
       </div>
 
-      {/* Details Container */}
       <div className="flex-1 bg-background rounded-t-[4rem] relative z-30 shadow-[0_-30px_100px_rgba(0,0,0,0.6)] p-8 flex flex-col animate-in slide-in-from-bottom-24 duration-1000">
-        
-        {/* Model Info Header */}
         <div className="flex justify-between items-end mb-8">
           <div className="space-y-1">
             <span className={cn(
@@ -202,7 +186,6 @@ export default function ScanPage() {
           </div>
         </div>
 
-        {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4 mb-8">
           <Card className="p-6 rounded-[2.5rem] border-none bg-secondary/20 shadow-sm">
             <div className="flex items-center gap-3">
@@ -232,7 +215,6 @@ export default function ScanPage() {
           </Card>
         </div>
 
-        {/* Info Row */}
         <div className="flex justify-center gap-12 px-6 mb-10">
           <div className="text-center">
             <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest block mb-1">Ride</span>
@@ -245,7 +227,6 @@ export default function ScanPage() {
           </div>
         </div>
 
-        {/* Final Action */}
         <Button 
           onClick={handleUnlock} 
           className={cn(

@@ -1,10 +1,11 @@
 
 "use client"
 
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader, OverlayView } from '@react-google-maps/api';
-import { Navigation, MapPin, UserCircle } from 'lucide-react';
+import { Navigation, MapPin, UserCircle, Zap, Info } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 const RAIPUR_CENTER = {
   lat: 21.2227,
@@ -26,42 +27,17 @@ const containerStyle = {
 const mapOptions = {
   disableDefaultUI: true,
   styles: [
-    {
-      "featureType": "all",
-      "elementType": "labels.text.fill",
-      "stylers": [{"color": "#7c93a3"}]
-    },
-    {
-      "featureType": "administrative",
-      "elementType": "geometry.fill",
-      "stylers": [{"color": "#dae3e8"}]
-    },
-    {
-      "featureType": "landscape",
-      "elementType": "geometry.fill",
-      "stylers": [{"color": "#f2f4f6"}]
-    },
-    {
-      "featureType": "poi",
-      "elementType": "geometry.fill",
-      "stylers": [{"color": "#e8ebed"}]
-    },
-    {
-      "featureType": "road",
-      "elementType": "geometry.fill",
-      "stylers": [{"color": "#ffffff"}]
-    },
-    {
-      "featureType": "water",
-      "elementType": "geometry.fill",
-      "stylers": [{"color": "#d1d9e0"}]
-    }
+    { "featureType": "all", "elementType": "labels.text.fill", "stylers": [{"color": "#7c93a3"}] },
+    { "featureType": "administrative", "elementType": "geometry.fill", "stylers": [{"color": "#dae3e8"}] },
+    { "featureType": "landscape", "elementType": "geometry.fill", "stylers": [{"color": "#f2f4f6"}] },
+    { "featureType": "poi", "elementType": "geometry.fill", "stylers": [{"color": "#e8ebed"}] },
+    { "featureType": "road", "elementType": "geometry.fill", "stylers": [{"color": "#ffffff"}] },
+    { "featureType": "water", "elementType": "geometry.fill", "stylers": [{"color": "#d1d9e0"}] }
   ]
 };
 
-// Helper to calculate distance in KM
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const R = 6371; // Radius of earth in KM
+  const R = 6371;
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
   const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -77,6 +53,7 @@ interface LiveMapProps {
 
 export function LiveMap({ onNearestStationFound }: LiveMapProps) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const isSimulation = !apiKey || apiKey === "YOUR_GOOGLE_MAPS_API_KEY";
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
@@ -87,19 +64,19 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
 
   useEffect(() => {
+    // Initial call to set nearest station even if geolocation fails
+    if (onNearestStationFound) {
+      onNearestStationFound(mockStations[3], 1.2); // Default to Telibandha
+    }
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const loc = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
+          const loc = { lat: position.coords.latitude, lng: position.coords.longitude };
           setUserLocation(loc);
           
-          // Find nearest station
           let nearest = mockStations[0];
           let minDistance = Infinity;
-          
           mockStations.forEach(station => {
             const dist = getDistance(loc.lat, loc.lng, station.lat, station.lng);
             if (dist < minDistance) {
@@ -107,56 +84,83 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
               nearest = station;
             }
           });
-
-          if (onNearestStationFound) {
-            onNearestStationFound(nearest, minDistance);
-          }
-        },
-        () => {
-          console.log("Geolocation permission denied");
+          if (onNearestStationFound) onNearestStationFound(nearest, minDistance);
         }
       );
     }
   }, [onNearestStationFound]);
 
-  const onLoad = useCallback(function callback(map: google.maps.Map) {
-    setMap(map);
-  }, []);
-
-  const onUnmount = useCallback(function callback(map: google.maps.Map) {
-    setMap(null);
-  }, []);
-
-  if (!apiKey || apiKey === "YOUR_GOOGLE_MAPS_API_KEY") {
+  if (isSimulation) {
     return (
-      <div className="w-full h-full bg-slate-100 flex items-center justify-center p-6 text-center">
-        <Card className="p-8 max-w-xs rounded-[2rem] border-dashed border-2">
-          <MapPin className="w-12 h-12 text-primary/40 mx-auto mb-4" />
-          <h3 className="font-headline text-lg mb-2">Map API Required</h3>
-          <p className="text-sm text-muted-foreground mb-4">Please add your Google Maps API key to the environment variables to see live Raipur stations.</p>
-          <div className="text-[10px] font-mono bg-muted p-2 rounded-lg break-all">
-            NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+      <div className="w-full h-full bg-[#E5F1FF] relative overflow-hidden">
+        {/* Stylized Simulated Map Background */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-full h-1 bg-primary/20 rotate-45" />
+          <div className="absolute top-1/2 left-0 w-full h-1 bg-primary/20" />
+          <div className="absolute top-0 left-1/2 w-1 h-full bg-primary/20" />
+          <div className="absolute top-1/3 right-1/4 w-full h-1 bg-primary/20 -rotate-12" />
+        </div>
+
+        {/* Mock Markers */}
+        {mockStations.map((station, idx) => (
+          <div 
+            key={station.id}
+            className="absolute transition-transform hover:scale-110"
+            style={{ 
+              top: `${20 + (idx * 15)}%`, 
+              left: `${15 + (idx * 20)}%` 
+            }}
+          >
+            <div className="relative flex flex-col items-center">
+              <div className="bg-white p-2 rounded-2xl shadow-xl border-2 border-primary flex items-center gap-2">
+                <div className="bg-primary p-1.5 rounded-lg text-white">
+                  <Navigation className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col pr-1">
+                  <span className="font-black text-[10px] text-primary leading-tight">{station.available} available</span>
+                  <span className="text-[8px] text-muted-foreground font-bold truncate max-w-[80px]">{station.label}</span>
+                </div>
+              </div>
+              <div className="w-3 h-3 bg-primary rounded-full mt-[-6px] shadow-lg border-2 border-white" />
+            </div>
           </div>
-        </Card>
+        ))}
+
+        {/* User Marker */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="relative flex items-center justify-center">
+            <div className="w-10 h-10 bg-blue-500/20 rounded-full animate-ping absolute" />
+            <div className="w-8 h-8 bg-blue-600 rounded-full border-4 border-white shadow-2xl z-10 flex items-center justify-center">
+              <UserCircle className="w-5 h-5 text-white" />
+            </div>
+          </div>
+        </div>
+
+        {/* Simulation Indicator */}
+        <div className="absolute top-6 left-6 z-50">
+          <div className="bg-white/90 backdrop-blur shadow-xl px-4 py-2.5 rounded-3xl border border-white/50 flex items-center gap-3">
+            <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
+            <span className="font-headline font-black text-[10px] tracking-widest uppercase text-primary">Raipur Live Simulation</span>
+          </div>
+        </div>
+
+        {/* Info Overlay */}
+        <div className="absolute bottom-6 left-6 right-6 z-50">
+          <Card className="bg-white/95 backdrop-blur-sm p-4 rounded-[2rem] border-none shadow-2xl flex items-center gap-4">
+            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+              <Info className="w-5 h-5 text-primary" />
+            </div>
+            <p className="text-[10px] font-bold text-muted-foreground leading-snug uppercase tracking-tight">
+              Prototype Mode: Showing simulated real-time data for Raipur Hubs.
+            </p>
+          </Card>
+        </div>
       </div>
     );
   }
 
-  if (loadError) {
-    return (
-      <div className="w-full h-full bg-slate-100 flex items-center justify-center">
-        <p className="text-destructive font-headline font-bold">MAP LOAD ERROR</p>
-      </div>
-    );
-  }
-
-  if (!isLoaded) {
-    return (
-      <div className="w-full h-full bg-slate-200 animate-pulse flex items-center justify-center">
-        <p className="text-muted-foreground font-headline font-bold tracking-widest">INITIALIZING MAP...</p>
-      </div>
-    );
-  }
+  if (loadError) return <div className="w-full h-full bg-slate-100 flex items-center justify-center"><p className="text-destructive font-headline font-bold">MAP LOAD ERROR</p></div>;
+  if (!isLoaded) return <div className="w-full h-full bg-slate-200 animate-pulse flex items-center justify-center"><p className="text-muted-foreground font-headline font-bold tracking-widest uppercase">Initializing Map...</p></div>;
 
   return (
     <div className="relative w-full h-full">
@@ -164,8 +168,7 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
         mapContainerStyle={containerStyle}
         center={userLocation || RAIPUR_CENTER}
         zoom={13}
-        onLoad={onLoad}
-        onUnmount={onUnmount}
+        onLoad={setMap}
         options={mapOptions}
       >
         {mockStations.map((station) => (
@@ -177,7 +180,7 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
             <div className="transform -translate-x-1/2 -translate-y-1/2">
               <div className="relative flex items-center justify-center">
                 <div className="absolute w-12 h-12 bg-primary/20 rounded-full animate-ping opacity-75" />
-                <div className="relative bg-white p-2 rounded-2xl shadow-xl border-2 border-primary flex items-center gap-2 transition-transform hover:scale-110 active:scale-95">
+                <div className="relative bg-white p-2 rounded-2xl shadow-xl border-2 border-primary flex items-center gap-2">
                   <div className="bg-primary p-1.5 rounded-lg text-white">
                     <Navigation className="w-4 h-4" />
                   </div>
@@ -192,10 +195,7 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
         ))}
 
         {userLocation && (
-          <OverlayView
-            position={userLocation}
-            mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-          >
+          <OverlayView position={userLocation} mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}>
             <div className="transform -translate-x-1/2 -translate-y-1/2">
               <div className="relative">
                 <div className="w-8 h-8 bg-blue-500 rounded-full border-4 border-white shadow-2xl z-10 relative flex items-center justify-center">
@@ -207,22 +207,6 @@ export function LiveMap({ onNearestStationFound }: LiveMapProps) {
           </OverlayView>
         )}
       </GoogleMap>
-
-      <div className="absolute top-6 right-6 flex flex-col gap-3">
-        <button 
-          onClick={() => map?.panTo(userLocation || RAIPUR_CENTER)}
-          className="bg-white/90 backdrop-blur shadow-lg p-3 rounded-2xl border border-white/50 active:scale-90 transition-transform"
-        >
-          <Navigation className="w-5 h-5 text-primary" />
-        </button>
-      </div>
-
-      <div className="absolute top-6 left-6">
-        <div className="bg-white/90 backdrop-blur shadow-lg px-4 py-3 rounded-3xl border border-white/50 flex items-center gap-3">
-          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
-          <span className="font-headline font-bold text-xs tracking-wide uppercase">Raipur Live</span>
-        </div>
-      </div>
     </div>
   );
 }
