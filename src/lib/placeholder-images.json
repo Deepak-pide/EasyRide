@@ -17,6 +17,30 @@
       "description": "Friendly city commuter",
       "imageUrl": "https://picsum.photos/seed/easyride3/200/200",
       "imageHint": "person smiling"
+    },
+    {
+      "id": "eco-celebration",
+      "description": "Lush green forest representing environmental impact",
+      "imageUrl": "https://picsum.photos/seed/easyride4/800/400",
+      "imageHint": "green forest"
+    },
+    {
+      "id": "raipur-skyline",
+      "description": "Beautiful city skyline at sunset",
+      "imageUrl": "https://picsum.photos/seed/easyride5/800/300",
+      "imageHint": "city skyline"
+    },
+    {
+      "id": "scooter-blue",
+      "description": "A sleek blue electric scooter",
+      "imageUrl": "https://picsum.photos/seed/blue-scooter/600/600",
+      "imageHint": "blue scooter"
+    },
+    {
+      "id": "scooter-red",
+      "description": "A stylish red electric scooter",
+      "imageUrl": "https://picsum.photos/seed/red-scooter/600/600",
+      "imageHint": "red scooter"
     }
   ]
 }
