@@ -25,7 +25,7 @@ export default function Home() {
       <div className="flex flex-col md:flex-row-reverse gap-8 px-0 md:px-8 py-0 md:py-8 w-full max-w-7xl mx-auto">
         
         {/* Right Sidebar - Desktop Only */}
-        <div className="hidden lg:flex flex-col w-80 gap-6 shrink-0">
+        <div className="hidden lg:flex flex-col w-80 gap-6 shrink-0 pt-10">
           <Card className="p-6 rounded-[2.5rem] border-none shadow-xl bg-primary text-white overflow-hidden relative">
             <TrendingUp className="w-12 h-12 absolute -right-2 -bottom-2 opacity-20" />
             <h3 className="font-headline font-black text-lg mb-2">PROMO ACTIVE</h3>
@@ -47,7 +47,7 @@ export default function Home() {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col pb-32 w-full md:max-w-none">
+        <div className="flex-1 flex flex-col pb-32 w-full md:max-w-none min-w-0">
           {/* Top Search Section */}
           <div className="sticky top-0 md:static z-40 bg-background/80 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none border-b md:border-none border-primary/5 px-6 pt-10 pb-4 md:px-0 md:pt-0 md:mb-6">
             <div className="relative w-full max-w-md">
@@ -59,15 +59,15 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Map Container */}
-          <div className="w-full h-[45vh] md:h-[60vh] min-h-[400px] relative px-4 md:px-0 shrink-0">
+          {/* Map Container - Ensuring visibility on all screens */}
+          <div className="w-full h-[45vh] md:h-[60vh] min-h-[450px] relative px-4 md:px-0 shrink-0 mb-8">
             <div className="w-full h-full rounded-[3.5rem] overflow-hidden shadow-2xl border-4 border-white relative bg-white">
               <LiveMap onNearestStationFound={handleNearestStationFound} />
             </div>
           </div>
 
           {/* Dynamic Overlay Info Area */}
-          <div className="px-6 md:px-0 -mt-12 md:mt-8 relative z-30 space-y-6 md:grid md:grid-cols-2 md:gap-6 md:space-y-0">
+          <div className="px-6 md:px-0 -mt-16 md:mt-0 relative z-30 space-y-6 md:grid md:grid-cols-2 md:gap-6 md:space-y-0">
             <Card className="p-8 rounded-[3.5rem] border-none shadow-2xl bg-white/95 backdrop-blur-md md:col-span-2 lg:col-span-1">
               <div className="flex justify-between items-start mb-6">
                 <div className="space-y-1">

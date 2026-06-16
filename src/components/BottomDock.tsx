@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Map, Zap, History, Leaf, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { playTapSound } from '@/lib/sound-utils';
 
 const navItems = [
   { icon: Map, label: 'Explore', href: '/' },
@@ -29,6 +30,7 @@ export function BottomDock() {
               <Link
                 key={item.label}
                 href={item.href}
+                onClick={playTapSound}
                 className="relative -top-6 flex flex-col items-center justify-center px-1"
               >
                 <div className="bg-accent text-accent-foreground p-5 rounded-full shadow-[0_8px_30px_rgb(255,235,51,0.4)] transition-transform active:scale-90 border-4 border-background">
@@ -45,6 +47,7 @@ export function BottomDock() {
             <Link
               key={item.label}
               href={item.href}
+              onClick={playTapSound}
               className="flex flex-col items-center justify-center flex-1 py-2 transition-colors active:scale-95"
             >
               <div className={cn(
