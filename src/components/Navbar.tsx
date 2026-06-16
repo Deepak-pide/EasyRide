@@ -62,8 +62,8 @@ export function Navbar() {
                 href={item.href}
                 onClick={playTapSound}
                 className={cn(
-                  "flex items-center gap-2 text-sm font-bold uppercase tracking-wider transition-all hover:text-primary hover:scale-105",
-                  isActive ? "text-primary scale-105" : "text-muted-foreground"
+                  "flex items-center gap-2 text-sm font-bold uppercase tracking-wider transition-all hover:text-primary",
+                  isActive ? "text-primary font-black" : "text-muted-foreground"
                 )}
               >
                 <Icon className="w-4 h-4" />
@@ -83,7 +83,7 @@ export function Navbar() {
         <Link 
           href="/scan"
           onClick={playTapSound}
-          className="bg-accent text-accent-foreground font-black rounded-full px-6 py-2 flex items-center gap-2 shadow-lg shadow-accent/20 hover:scale-105 active:scale-95 transition-all"
+          className="bg-accent text-accent-foreground font-black rounded-full px-6 py-2 flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95 transition-all"
         >
           <Zap className="w-4 h-4 fill-current" />
           UNLOCK SCOOTER
