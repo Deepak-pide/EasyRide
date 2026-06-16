@@ -1,3 +1,4 @@
+
 "use client"
 
 import React from 'react';
@@ -19,8 +20,10 @@ import {
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function ProfilePage() {
+  const avatarImage = PlaceHolderImages.find(img => img.id === 'user-avatar');
   const user = {
     name: "Raipur Explorer",
     email: "explorer@raipur.in",
@@ -55,7 +58,13 @@ export default function ProfilePage() {
       <div className="px-6 mb-8">
         <Card className="p-6 rounded-[2.5rem] border-none shadow-xl bg-white flex items-center gap-5">
           <Avatar className="h-20 w-20 border-4 border-primary/10">
-            <AvatarImage src="https://picsum.photos/seed/user123/200/200" data-ai-hint="person portrait" />
+            {avatarImage && (
+              <AvatarImage 
+                src={avatarImage.imageUrl} 
+                alt={avatarImage.description}
+                data-ai-hint={avatarImage.imageHint} 
+              />
+            )}
             <AvatarFallback className="bg-primary text-white text-xl font-bold">RE</AvatarFallback>
           </Avatar>
           <div className="flex-1">

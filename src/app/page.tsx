@@ -2,15 +2,18 @@
 "use client"
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { LiveMap } from '@/components/LiveMap';
 import { BottomDock } from '@/components/BottomDock';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Zap, MapPin, Bike, Search, Navigation } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
   const [nearestStation, setNearestStation] = useState<{label: string, distance: number} | null>(null);
+  const heroImage = PlaceHolderImages.find(img => img.id === 'raipur-skyline');
 
   const handleNearestStationFound = (station: any, distance: number) => {
     setNearestStation({
@@ -33,7 +36,7 @@ export default function Home() {
       </div>
 
       {/* Map Content - Fixed Height for Mobile Viewport */}
-      <div className="h-[60vh] relative z-10">
+      <div className="h-[55vh] relative z-10">
         <div className="absolute inset-0 rounded-b-[3rem] overflow-hidden shadow-2xl">
           <LiveMap onNearestStationFound={handleNearestStationFound} />
         </div>
@@ -41,6 +44,21 @@ export default function Home() {
 
       {/* Welcome Card & Info */}
       <div className="px-6 -mt-12 relative z-30 space-y-4">
+        {heroImage && (
+          <div className="w-full h-24 rounded-[2rem] overflow-hidden relative shadow-lg">
+            <Image 
+              src={heroImage.imageUrl}
+              alt={heroImage.description}
+              fill
+              className="object-cover opacity-80"
+              data-ai-hint={heroImage.imageHint}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/40 to-transparent flex items-center px-6">
+              <h2 className="text-white font-headline font-black text-xl italic tracking-tight">RIDE RAIPUR</h2>
+            </div>
+          </div>
+        )}
+
         <Card className="p-6 rounded-[2.5rem] border-none shadow-2xl bg-white/95 backdrop-blur-sm">
           <div className="flex justify-between items-start mb-4">
             <div>

@@ -1,6 +1,8 @@
+
 "use client"
 
 import React, { useState, useEffect, Suspense } from 'react';
+import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -17,13 +19,14 @@ import {
 } from 'lucide-react';
 import { ecoRideNarrative, type EcoRideNarrativeOutput } from '@/ai/flows/eco-ride-narrative';
 import { Progress } from '@/components/ui/progress';
-import { cn } from '@/lib/utils';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 function EcoContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [narrative, setNarrative] = useState<EcoRideNarrativeOutput | null>(null);
   const [loading, setLoading] = useState(true);
+  const ecoImage = PlaceHolderImages.find(img => img.id === 'eco-celebration');
 
   const dist = Number(searchParams.get('dist')) || 4.2;
   const dur = Number(searchParams.get('dur')) || 12;
@@ -72,9 +75,18 @@ function EcoContent() {
 
         {/* AI Insight Card */}
         <Card className="relative overflow-hidden p-0 rounded-[3.5rem] border-none shadow-2xl bg-white">
-          <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
-            <Globe className="w-48 h-48" />
-          </div>
+          {ecoImage && (
+            <div className="w-full h-40 relative">
+              <Image 
+                src={ecoImage.imageUrl}
+                alt={ecoImage.description}
+                fill
+                className="object-cover"
+                data-ai-hint={ecoImage.imageHint}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-white to-transparent" />
+            </div>
+          )}
 
           <div className="p-8 pb-4">
             {loading ? (

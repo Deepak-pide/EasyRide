@@ -1,0 +1,35 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "scooter-hero",
+      "description": "Sleek modern electric scooter on city street",
+      "imageUrl": "https://picsum.photos/seed/easyride1/800/600",
+      "imageHint": "electric scooter"
+    },
+    {
+      "id": "map-bg",
+      "description": "Abstract city map visualization",
+      "imageUrl": "https://picsum.photos/seed/easyride2/1200/800",
+      "imageHint": "city map"
+    },
+    {
+      "id": "user-avatar",
+      "description": "Friendly city commuter",
+      "imageUrl": "https://picsum.photos/seed/easyride3/200/200",
+      "imageHint": "person smiling"
+    },
+    {
+      "id": "eco-celebration",
+      "description": "Lush green forest representing environmental impact",
+      "imageUrl": "https://picsum.photos/seed/easyride4/800/400",
+      "imageHint": "green forest"
+    },
+    {
+      "id": "raipur-skyline",
+      "description": "Beautiful city skyline at sunset",
+      "imageUrl": "https://picsum.photos/seed/easyride5/800/300",
+      "imageHint": "city skyline"
+    }
+  ]
+}
